@@ -20,6 +20,7 @@
 using namespace std;
 
 void sendFile(string fileName, long fileSize, int outToClient);
+void recieve(int sock);
 
 const char* server_INET = "10.0.0.1";
 const char* client_INET = "10.0.0.2";
@@ -68,7 +69,7 @@ int main(int argc, char *argv[])
         error("ERROR Converting text-address to binary");
     };
 
-    cout << "Creating/Opening socket.." << endl;
+    cout << "Creating/Opening socket on " << server_address.sin_addr.s_addr << ":" <<server_address.sin_port <<endl;
     /*Create socket*/
     sockfd = socket(AF_INET,SOCK_STREAM,0);
     if (sockfd<0)
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
         if (pid == 0)
         {
             close(sockfd);
+            recieve(newsockfd);
             exit(0);
         }
 
