@@ -15,6 +15,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iknlib.h>
+#include <arpa/inet.h>
 
 using namespace std;
 
@@ -32,7 +33,7 @@ void error(char* str)
 struct package {
    string fileName;
    long fileSize;
-}
+};
 
 /**
  * main starter serveren og venter på en forbindelse fra en klient
@@ -48,19 +49,26 @@ struct package {
  */
 int main(int argc, char *argv[])
 {
+    cout << "Initializing variables.." << endl;
     /*Defintions*/
-    int sockfd, newsockfd, portno, clilen, n;
+    int sockfd, newsockfd, portno, clilen, pid;
     struct sockaddr_in server_address, client_address;
 
     /*Declarations and assignments*/
     bzero((char*) &server_address, sizeof(server_address)); //Fill address with zeros
     portno = 9000;
 
+    cout << "Initializing server structures.." << endl;
     /*Fill server address struct*/
-    server_address.sin_family = AF_INET;
-    server_address.sin_port   = htons(portno);
-    server_address.sin_addr   = server_INET;   //Host IP ETH1 - (INADDR_ANY: gets local ip)
+    server_address.sin_family       = AF_INET;
+    server_address.sin_port         = htons(portno);
 
+    if (!inet_pton(AF_INET, server_INET, &server_address.sin_addr))  //Host IP ETH1
+    {
+        error("ERROR Converting text-address to binary");
+    };
+
+    cout << "Creating/Opening socket.." << endl;
     /*Create socket*/
     sockfd = socket(AF_INET,SOCK_STREAM,0);
     if (sockfd<0)
@@ -68,12 +76,14 @@ int main(int argc, char *argv[])
         error("ERROR Opening socket!");
     }
 
+    cout << "Binding socket to address.." << endl;
     /*Bind socket to address*/
     if (bind(sockfd, (struct sockaddr*) &server_address, sizeof(server_address)) < 0)
     {
         error("ERROR Binding socket to address!");
     }
 
+    cout << "Listening for message.." << endl;
     /*Listen for server*/
     listen(sockfd,5);   //Maybe change 1 to 5
 
@@ -81,7 +91,7 @@ int main(int argc, char *argv[])
     while(1)
     {
         clilen      = sizeof(client_address);
-        newsockfd   = accept(sockfd,(struct sockaddr*) &client_address, &clilen);
+        newsockfd   = accept(sockfd,(struct sockaddr*) &client_address, (socklen_t*)&clilen);
         if (newsockfd < 0 )
         {
             error("ERROR on accept!");
@@ -115,7 +125,7 @@ void recieve(int sock)
     if (n < 0) error("ERROR writing to socket");
 
     /*AWK to client*/
-    n = write(newsockfd,buffer,sizeof(buffer)-1);
+    n = write(sock,buffer,sizeof(buffer)-1);
     if (n < 0)
     {
         error("ERROR Writing AWK back to client!");
