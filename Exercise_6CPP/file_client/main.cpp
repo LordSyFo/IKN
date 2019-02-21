@@ -34,36 +34,51 @@ void error(char* str)
 int main(int argc, char *argv[])
 {    
     /*Defintions*/
+    cout << "Initializing variables.." << endl;
     int sockfd, portno, n;
     struct sockaddr_in server_address;
     struct hostent *server;
     portno = 9000;
 
     /*Open socket */
+    cout << "Opening socket.." << endl;
     sockfd = socket(AF_INET,SOCK_STREAM,0);
     if (sockfd<0)
     {
         error("ERROR opening socket!");
     }
 
-    struct hostent *gethostbyaddr(server_INET,strlen(server_INET),AF_INET);
+    server = gethostbyname("10.0.0.1");
 
+    cout << "Retrieved host " << server->h_name << ".." <<endl;
+
+    cout << "Setting up server address.." << endl;
     /*Set up server address*/
     bzero((char*) &server_address, sizeof(server_address));
     server_address.sin_family = AF_INET;
+
+    cout << "Copying address to server->h_addr.." << endl;
     bcopy((char*)server->h_addr,
           (char*)&server_address.sin_addr.s_addr,
           server->h_length);
+
+    cout << "Assigning server port.." << endl;
     server_address.sin_port = htons(portno);
 
     /*Connect to server*/
-    if (connect(sockfd,&server_address,sizeof(server_address))<0)
+    cout << "Connecting to server.." << endl;
+    if (connect(sockfd,(const sockaddr*)&server_address,sizeof(server_address))<0)
     {
         error("ERROR connecting to server");
     }
 
+    cout << "Server information:" << endl;
+    cout << "IP4: " << server_address.sin_addr.s_addr <<endl;
+    cout << "Port: " << server_address.sin_port <<endl;
+
     /*Send test message*/
-    buffer = "Hello world!";
+    cout << "Attempting to send message to server.." << endl;
+    char* buffer = "Hello world!";
     n = write(sockfd,buffer,strlen(buffer));
     if (n < 0)
     {
@@ -71,6 +86,7 @@ int main(int argc, char *argv[])
     }
 
     /*Recieve response*/
+    cout << "Recieving response from server.." << endl;
     bzero(buffer,sizeof(buffer));
     n = read(sockfd,buffer,sizeof(buffer)-1);
     if (n < 0)
