@@ -39,6 +39,7 @@ int main(int argc, char *argv[])
     struct sockaddr_in server_address;
     struct hostent *server;
     portno = 9000;
+    char buffer[256];
 
     /*Open socket */
     cout << "Opening socket.." << endl;
@@ -78,7 +79,9 @@ int main(int argc, char *argv[])
 
     /*Send test message*/
     cout << "Attempting to send message to server.." << endl;
-    char* buffer = "Hello world!";
+
+    strcpy(buffer,"Hello world");
+
     n = write(sockfd,buffer,strlen(buffer));
     if (n < 0)
     {
@@ -88,12 +91,14 @@ int main(int argc, char *argv[])
     /*Recieve response*/
     cout << "Recieving response from server.." << endl;
     bzero(buffer,sizeof(buffer));
-    n = read(sockfd,buffer,sizeof(buffer)-1);
+    cout << "Attempting to read from socket.." << endl;
+    n = read(sockfd,buffer,255);
     if (n < 0)
     {
         error("ERROR Reading from socket");
     }
     printf("Recieved: %s", buffer);
+
     return 0;
 
 }
