@@ -50,89 +50,9 @@ struct package {
  */
 int main(int argc, char *argv[])
 {
-    cout << "Initializing variables.." << endl;
-    /*Defintions*/
-    int sockfd, newsockfd, portno, clilen, pid;
-    struct sockaddr_in server_address, client_address;
-
-    /*Declarations and assignments*/
-    bzero((char*) &server_address, sizeof(server_address)); //Fill address with zeros
-    portno = 9000;
-
-    cout << "Initializing server structures.." << endl;
-    /*Fill server address struct*/
-    server_address.sin_family       = AF_INET;
-    server_address.sin_port         = htons(portno);
-
-    if (!inet_pton(AF_INET, server_INET, &server_address.sin_addr))  //Host IP ETH1
-    {
-        error("ERROR Converting text-address to binary");
-    };
-
-    cout << "Creating/Opening socket on " << server_address.sin_addr.s_addr << ":" <<server_address.sin_port <<endl;
-    /*Create socket*/
-    sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if (sockfd<0)
-    {
-        error("ERROR Opening socket!");
-    }
-
-    cout << "Binding socket to address.." << endl;
-    /*Bind socket to address*/
-    if (bind(sockfd, (struct sockaddr*) &server_address, sizeof(server_address)) < 0)
-    {
-        error("ERROR Binding socket to address!");
-    }
-
-    cout << "Listening for message.." << endl;
-    /*Listen for server*/
-    listen(sockfd,5);   //Maybe change 1 to 5
-
-    /*Wait for client-connection*/
-    while(1)
-    {
-        clilen      = sizeof(client_address);
-        newsockfd   = accept(sockfd,(struct sockaddr*) &client_address, (socklen_t*)&clilen);
-        if (newsockfd < 0 )
-        {
-            error("ERROR on accept!");
-        }
-        pid = fork();
-        if(pid < 0)
-        {
-            error("ERROR on fork!");
-        }
-        if (pid == 0)
-        {
-            close(sockfd);
-            recieve(newsockfd);
-            exit(0);
-        }
-
-    }
     return 0;
 }
 
-void recieve(int sock)
-{
-    int n;
-    char buffer[256];
-
-    /*Read from socket*/
-    bzero(buffer,256);
-    n = read(sock,buffer,255);
-    if (n < 0) error("ERROR reading from socket");
-    printf("Here is the message: %s\n",buffer);
-    n = write(sock,"I got your message",18);
-    if (n < 0) error("ERROR writing to socket");
-
-    /*AWK to client*/
-    n = write(sock,buffer,sizeof(buffer)-1);
-    if (n < 0)
-    {
-        error("ERROR Writing AWK back to client!");
-    }
-}
 
 /**
  * Sender filen som har navnet fileName til klienten
