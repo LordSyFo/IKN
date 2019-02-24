@@ -7,6 +7,12 @@ class client_socket:public bsocket
 public:
     client_socket(char* target_ip, int portno);
     void _connect();
+    virtual int _open();
+
+protected:
+    virtual int _getSockFd();
+    virtual void listen_callback();
+
 
 private:
     struct hostent *_server;

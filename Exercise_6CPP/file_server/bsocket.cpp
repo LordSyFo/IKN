@@ -13,6 +13,11 @@
 
 using namespace std;
 
+bsocket::bsocket()
+{
+
+}
+
 bsocket::bsocket(char* ip, int portno)
 {
     cout << "Initializing variables.." << endl;
@@ -77,7 +82,7 @@ void bsocket::_listen()
         if (_pid == 0)
         {
             close(_sockfd);
-            listen_callback(_newsockfd);
+            listen_callback();
             exit(0);
         }
     }
@@ -85,37 +90,42 @@ void bsocket::_listen()
 
 void bsocket::listen_callback()
 {
-    _recieve(sock);
+    _recieve();
     cout << "Recieved: " << _buffer;
-    _awkToClient(sock);
+    _awkToClient();
 }
 
-char* bsocket::_recieve(int sock)
+char* bsocket::_recieve()
 {
     int n;
     /*Read from socket*/
     bzero(_buffer,256);
-    n = read(sock,_buffer,255);
+    n = read(getSocketFd(),_buffer,255);
     if (n < 0) error("ERROR reading from socket");
     return _buffer;
 }
 
-void bsocket::_awkToClient(int sock)
+void bsocket::_awkToClient()
 {
     /*AWK to client*/
     int n;
     cout << "Attempting to AWK back to client!" << endl;
     strcpy(_buffer,"I got your message!");
-    n = write(sock,_buffer,strlen(_buffer));
+    n = write(getSocketFd(),_buffer,strlen(_buffer));
     if (n < 0)
     {
         error("ERROR Writing AWK back to client!");
     }
 }
 
-void bsocket::_sendMessage(char* str, int sock)
+int bsocket::getSocketFd()
 {
-    int n = write(sock,str,strlen(str));
+    return _newsockfd;
+}
+
+void bsocket::_sendMessage(char* str)
+{
+    int n = write(getSocketFd(),str,strlen(str));
     if (n < 0)
     {
         error("ERROR Writing to socket!");
