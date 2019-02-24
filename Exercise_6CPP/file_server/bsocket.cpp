@@ -95,14 +95,15 @@ void bsocket::listen_callback()
     _awkToClient();
 }
 
-char* bsocket::_recieve()
+void bsocket::_recieve()
 {
     int n;
     /*Read from socket*/
     bzero(_buffer,256);
     n = read(getSocketFd(),_buffer,255);
-    if (n < 0) error("ERROR reading from socket");
-    return _buffer;
+    if (n < 0) {
+        error("ERROR reading from socket");
+    }
 }
 
 void bsocket::_awkToClient()
@@ -145,7 +146,7 @@ void bsocket::sendFile(string fileName, long fileSize, int outToClient)
 }
 
 
-void bsocket::error(char* str)
+void bsocket::error(const char* str)
 {
     perror(str);
     exit(1);

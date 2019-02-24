@@ -9,12 +9,12 @@ public:
     bsocket();
     bsocket(char* ip, int portno);
     void sendFile(std::string fileName, long fileSize, int outToClient);
-    virtual char* _recieve();
-    void error(char* str);
+    virtual void _recieve();
+    void error(const char* str);
     virtual void _listen();
     virtual int _open();
     void _awkToClient();
-    virtual void _sendMessage(char* str);
+    void _sendMessage(char* str);
 
 protected:
     char _buffer[256];

@@ -22,7 +22,6 @@ int main(int argc, char *argv[])
     Client._open();
     Client._connect();
 
-
     /*Send test message*/
     cout << "Attempting to send message to server.." << endl;
     Client._sendMessage("Hello world!");

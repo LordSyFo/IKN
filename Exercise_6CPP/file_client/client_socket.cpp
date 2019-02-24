@@ -53,7 +53,7 @@ void client_socket::_connect()
     cout << "Port: " << _server_address.sin_port <<endl;
 }
 
-int client_socket::_getSockFd()
+int client_socket::getSocketFd()
 {
     return _sockfd;
 }
@@ -69,9 +69,13 @@ int client_socket::_open()
     }
 }
 
+void client_socket:: _listen()
+{
+    listen_callback();
+    cout << _buffer;
+}
 
 void client_socket::listen_callback()
 {
     _recieve();
-    cout << "Recieved: " << _buffer;
 }
