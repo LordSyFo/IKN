@@ -50,9 +50,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../file_server/main.cpp 
-OBJECTS       = main.o
-DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
+SOURCES       = ../file_server/main.cpp \
+		../file_server/bsocket.cpp 
+OBJECTS       = main.o \
+		bsocket.o
+DIST          = ../file_server/backup \
+		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/linux.conf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/sanitize.conf \
@@ -120,7 +123,8 @@ DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../file_server/file_server.pro  ../file_server/main.cpp
+		../file_server/file_server.pro bsocket.h ../file_server/main.cpp \
+		../file_server/bsocket.cpp
 QMAKE_TARGET  = file_server
 DESTDIR       = 
 TARGET        = file_server
@@ -314,8 +318,11 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../file_server/main.cpp 
+main.o: ../file_server/main.cpp ../file_server/bsocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../file_server/main.cpp
+
+bsocket.o: ../file_server/bsocket.cpp ../file_server/bsocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/bsocket.cpp
 
 ####### Install
 

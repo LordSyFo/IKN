@@ -4,12 +4,12 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    server.cpp
+    bsocket.cpp
 
 unix:!macx: LIBS += -liknlib
 
 HEADERS += \
-    server.h
+    bsocket.h
 
 DISTFILES += \
     backup

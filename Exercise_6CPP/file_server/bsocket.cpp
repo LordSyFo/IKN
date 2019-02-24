@@ -1,4 +1,4 @@
-#include "server.h"
+#include "bsocket.h"
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -13,7 +13,7 @@
 
 using namespace std;
 
-server::server(char* ip, int portno)
+bsocket::bsocket(char* ip, int portno)
 {
     cout << "Initializing variables.." << endl;
     /*Declarations and assignments*/
@@ -31,7 +31,7 @@ server::server(char* ip, int portno)
     };
 }
 
-int server::open()
+int bsocket::_open()
 {
     cout << "Creating/Opening socket on " << _server_address.sin_addr.s_addr << ":" << _server_address.sin_port <<endl;
     /*Create socket*/
@@ -53,7 +53,7 @@ int server::open()
     return 1;
 }
 
-void server::listen()
+void bsocket::_listen()
 {
 
     cout << "Listening for message.." << endl;
@@ -77,37 +77,65 @@ void server::listen()
         if (_pid == 0)
         {
             close(_sockfd);
-            recieve(_newsockfd);
+            listen_callback(_newsockfd);
             exit(0);
         }
-
     }
-
 }
 
-void server::recieve()
+void bsocket::listen_callback(int sock)
+{
+    _recieve(sock);
+    cout << "Recieved: " << _buffer;
+    _awkToClient(sock);
+}
+
+char* bsocket::_recieve(int sock)
 {
     int n;
-
     /*Read from socket*/
     bzero(_buffer,256);
-    n = read(_newsockfd,_buffer,255);
+    n = read(sock,_buffer,255);
     if (n < 0) error("ERROR reading from socket");
-    cout << "Heres the message: " << _buffer << endl;
+    return _buffer;
+}
 
-
+void bsocket::_awkToClient(int sock)
+{
     /*AWK to client*/
+    int n;
     cout << "Attempting to AWK back to client!" << endl;
     strcpy(_buffer,"I got your message!");
-    n = write(_newsockfd,_buffer,strlen(_buffer));
+    n = write(sock,_buffer,strlen(_buffer));
     if (n < 0)
     {
         error("ERROR Writing AWK back to client!");
     }
 }
 
+void bsocket::_sendMessage(char* str, int sock)
+{
+    int n = write(sock,str,strlen(str));
+    if (n < 0)
+    {
+        error("ERROR Writing to socket!");
+    }
+}
 
-void server::error(char* str)
+/**
+ * Sender filen som har navnet fileName til klienten
+ *
+ * @param fileName Filnavn som skal sendes til klienten
+ * @param fileSize Størrelsen på filen, 0 hvis den ikke findes
+ * @param outToClient Stream som der skrives til socket
+     */
+void bsocket::sendFile(string fileName, long fileSize, int outToClient)
+{
+    // TO DO Your own code
+}
+
+
+void bsocket::error(char* str)
 {
     perror(str);
     exit(1);
