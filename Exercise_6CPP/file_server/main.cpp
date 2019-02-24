@@ -6,6 +6,10 @@
 //============================================================================
 
 #include "bsocket.h"
+#include "filehandler.h"
+#include <iostream>
+
+using namespace std;
 
 //void sendFile(string fileName, long fileSize, int outToClient);
 //void recieve(int sock);
@@ -34,12 +38,24 @@ void error(char* str)
  */
 int main(int argc, char *argv[])
 {
-    /*Make socket object*/
-    bsocket Server("10.0.0.1",9000);
 
-    /*Open socket*/
-    Server._open();
-    Server._listen();
+    fileHandler FileH;
+    FileH.printFiles();
+    string file = "Picture1.jpg";
+    if (FileH.checkForFile(file))
+    {
+        cout << FileH.openFile(file);
+    } else
+    {
+        cout << file << " doesnt exist!" << endl;
+    }
+
+//    /*Make socket object*/
+//    bsocket Server("10.0.0.1",9000);
+
+//    /*Open socket*/
+//    Server._open();
+//    Server._listen();
 
     return 0;
 }
