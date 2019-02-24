@@ -22,7 +22,7 @@ client_socket::client_socket(char* target_ip, int portno): _portno(portno)
     _server_address.sin_port = htons(portno);
 }
 
-client_socket::connect()
+client_socket::_connect()
 {
     /*Connect to server*/
     cout << "Connecting to server.." << endl;

@@ -83,7 +83,7 @@ void bsocket::_listen()
     }
 }
 
-void bsocket::listen_callback(int sock)
+void bsocket::listen_callback()
 {
     _recieve(sock);
     cout << "Recieved: " << _buffer;
