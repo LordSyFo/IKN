@@ -50,8 +50,12 @@ OBJECTS_DIR   = ./
 
 ####### Files
 
-SOURCES       = ../file_client/main.cpp 
-OBJECTS       = main.o
+SOURCES       = ../file_client/main.cpp \
+		../file_client/client_socket.cpp \
+		../file_server/bsocket.cpp 
+OBJECTS       = main.o \
+		client_socket.o \
+		bsocket.o
 DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -120,7 +124,10 @@ DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../file_client/file_client.pro  ../file_client/main.cpp
+		../file_client/file_client.pro client_socket.h \
+		../file_server/bsocket.h ../file_client/main.cpp \
+		../file_client/client_socket.cpp \
+		../file_server/bsocket.cpp
 QMAKE_TARGET  = file_client
 DESTDIR       = 
 TARGET        = file_client
@@ -314,8 +321,16 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../file_client/main.cpp 
+main.o: ../file_client/main.cpp ../file_client/client_socket.h \
+		/root/Git/IKN/Exercise_6CPP/file_server/bsocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../file_client/main.cpp
+
+client_socket.o: ../file_client/client_socket.cpp ../file_client/client_socket.h \
+		/root/Git/IKN/Exercise_6CPP/file_server/bsocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o client_socket.o ../file_client/client_socket.cpp
+
+bsocket.o: ../file_server/bsocket.cpp ../file_server/bsocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/bsocket.cpp
 
 ####### Install
 

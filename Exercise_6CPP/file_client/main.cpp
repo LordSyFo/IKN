@@ -4,100 +4,29 @@
 // Version     : 1.0
 // Description : file_client in C++, Ansi-style
 //============================================================================
-
+#include "client_socket.h"
 #include <iostream>
-#include <fstream>
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <iknlib.h>
 
 using namespace std;
 
-void receiveFile(string fileName, int socketfd);
+//void receiveFile(string fileName, int socketfd);
 
-const char* server_INET = "10.0.0.1";
-const char* client_INET = "10.0.0.2";
-
-void error(char* str)
-{
-    perror(str);
-    exit(1);
-}
+//const char* server_INET = "10.0.0.1";
+//const char* client_INET = "10.0.0.2";
 
 
 int main(int argc, char *argv[])
 {    
-    /*Defintions*/
-    cout << "Initializing variables.." << endl;
-    int sockfd, portno, n;
-    struct sockaddr_in server_address;
-    struct hostent *server;
-    portno = 9000;
-    char buffer[256];
 
-    /*Open socket */
-    cout << "Opening socket.." << endl;
-    sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if (sockfd<0)
-    {
-        error("ERROR opening socket!");
-    }
+    client_socket Client("10.0.0.1",9000);
+    Client._open();
+    Client._connect();
 
-    server = gethostbyname("10.0.0.1");
-
-    cout << "Retrieved host " << server->h_name << ".." <<endl;
-
-    cout << "Setting up server address.." << endl;
-    /*Set up server address*/
-    bzero((char*) &server_address, sizeof(server_address));
-    server_address.sin_family = AF_INET;
-
-    cout << "Copying address to server->h_addr.." << endl;
-    bcopy((char*)server->h_addr,
-          (char*)&server_address.sin_addr.s_addr,
-          server->h_length);
-
-    cout << "Assigning server port.." << endl;
-    server_address.sin_port = htons(portno);
-
-    /*Connect to server*/
-    cout << "Connecting to server.." << endl;
-    if (connect(sockfd,(const sockaddr*)&server_address,sizeof(server_address))<0)
-    {
-        error("ERROR connecting to server");
-    }
-
-    cout << "Server information:" << endl;
-    cout << "IP4: " << server_address.sin_addr.s_addr <<endl;
-    cout << "Port: " << server_address.sin_port <<endl;
 
     /*Send test message*/
     cout << "Attempting to send message to server.." << endl;
-
-    strcpy(buffer,"Hello world");
-
-    n = write(sockfd,buffer,strlen(buffer));
-    if (n < 0)
-    {
-        error("ERROR Writing to socket!");
-    }
-
-    /*Recieve response*/
-    cout << "Recieving response from server.." << endl;
-    bzero(buffer,sizeof(buffer));
-    cout << "Attempting to read from socket.." << endl;
-    n = read(sockfd,buffer,255);
-    if (n < 0)
-    {
-        error("ERROR Reading from socket");
-    }
-    printf("Recieved: %s", buffer);
+    Client._sendMessage("Hello world!");
+    Client._listen();
 
     return 0;
 

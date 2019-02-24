@@ -1,8 +1,24 @@
 #include "client_socket.h"
 #include "stdlib.h"
+#include <iostream>
+#include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <iknlib.h>
+#include <arpa/inet.h>
+#include <netdb.h>
 
-client_socket::client_socket(char* target_ip, int portno): _portno(portno)
+using namespace std;
+
+client_socket::client_socket(char* target_ip, int portno)
 {
+
+
     /*Defintions*/
     cout << "Initializing variables.." << endl;
     _server = gethostbyname(target_ip);
@@ -22,7 +38,7 @@ client_socket::client_socket(char* target_ip, int portno): _portno(portno)
     _server_address.sin_port = htons(portno);
 }
 
-client_socket::connect()
+void client_socket::_connect()
 {
     /*Connect to server*/
     cout << "Connecting to server.." << endl;
@@ -37,19 +53,25 @@ client_socket::connect()
     cout << "Port: " << _server_address.sin_port <<endl;
 }
 
-bsocket::_open()
+int client_socket::_getSockFd()
+{
+    return _sockfd;
+}
+
+int client_socket::_open()
 {
     /*Open socket */
     cout << "Opening socket.." << endl;
-    sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if (sockfd<0)
+    _sockfd = socket(AF_INET,SOCK_STREAM,0);
+    if (_sockfd<0)
     {
         error("ERROR opening socket!");
     }
 }
 
 
-bsocket::listen_callback(int sock)
+void client_socket::listen_callback()
 {
-    return 0;
+    _recieve();
+    cout << "Recieved: " << _buffer;
 }
