@@ -38,7 +38,11 @@ client_socket::client_socket(char* target_ip, int portno)
     _server_address.sin_port = htons(portno);
 }
 
+<<<<<<< HEAD
+client_socket::_connect()
+=======
 void client_socket::_connect()
+>>>>>>> a1d8b8519761029f799bed4c21217c013aa45555
 {
     /*Connect to server*/
     cout << "Connecting to server.." << endl;
