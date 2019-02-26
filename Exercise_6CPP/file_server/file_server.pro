@@ -5,13 +5,16 @@ CONFIG -= qt
 
 SOURCES += main.cpp \
     bsocket.cpp \
-    filehandler.cpp
+    filehandler.cpp \
+    message.cpp
 
 unix:!macx: LIBS += -liknlib
 
 HEADERS += \
     bsocket.h \
-    filehandler.h
+    filehandler.h \
+    message.h
 
 DISTFILES += \
-    backup
+    backup \
+    ../../simpleFileCopy.txt

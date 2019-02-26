@@ -11,6 +11,7 @@ public:
     int updateFilesInCurrentFolder();
     bool checkForFile(const std::string str);
     std::string openFile(const std::string);
+    int getSize(std::string str);
 
 private:
     std::vector<std::string> files;

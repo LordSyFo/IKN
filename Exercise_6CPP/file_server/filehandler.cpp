@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <fstream>
 #include <sstream>
+#include <string>
 
 using namespace std;
 
@@ -22,9 +23,9 @@ void fileHandler::printFiles()
 
 string fileHandler::openFile(string fileName)
 {
-    ifstream f(fileName.insert(0,fileDir), ios::binary);
+    ifstream fin(fileName.insert(0,fileDir), ios::binary);
     stringstream sstr;
-    sstr << f.rdbuf();
+    sstr << fin.rdbuf();
     return sstr.str();
 }
 
@@ -47,3 +48,12 @@ bool fileHandler::checkForFile(const std::string str){
     return false;
 }
 
+int fileHandler::getSize(std::string str)
+{
+    if (checkForFile(str))
+    {
+        string temp = openFile(str);
+        return temp.length();
+    }
+    return -1;
+}

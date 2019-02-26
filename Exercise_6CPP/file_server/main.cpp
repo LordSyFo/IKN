@@ -8,6 +8,7 @@
 #include "bsocket.h"
 #include "filehandler.h"
 #include <iostream>
+#include "message.h"
 
 using namespace std;
 
@@ -44,11 +45,21 @@ int main(int argc, char *argv[])
     string file = "Picture1.jpg";
     if (FileH.checkForFile(file))
     {
-        cout << FileH.openFile(file);
+        //cout << FileH.openFile(file) << endl;
+        cout << FileH.getSize(file) << endl;
     } else
     {
         cout << file << " doesnt exist!" << endl;
     }
+
+    /*Make message*/
+    message myMessage(FileH, file, 1000);
+    myMessage.printMessage(0);
+    cout << myMessage.getNumberOfMessages() << " : " << (double)FileH.getSize(file)/1000.0 << endl;
+    file_message fm;
+    fm = myMessage.parseFileMessage(myMessage.getMessages());
+    cout << "Size of file: " << fm.fileSize << endl;
+    cout << "Size of datastring: " << fm.data.size() << endl;
 
 //    /*Make socket object*/
 //    bsocket Server("10.0.0.1",9000);
