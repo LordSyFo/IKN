@@ -12,6 +12,8 @@ public:
     bool checkForFile(const std::string str);
     std::string openFile(const std::string);
     int getSize(std::string str);
+    int makeFileFromString(std::string binary, std::string type); TODO!!
+     
 
 private:
     std::vector<std::string> files;
