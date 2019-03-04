@@ -6,6 +6,9 @@
 //============================================================================
 #include "client_socket.h"
 #include <iostream>
+#include </root/Git/IKN/Exercise_6CPP/file_server/filehandler.h>
+#include </root/Git/IKN/Exercise_6CPP/file_server/message.h>
+#include <string>
 
 using namespace std;
 
@@ -17,15 +20,23 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {    
+    if (argc < 2)
+    {
+        cout << "Usage: \.exe \"Filename with extension\"" << endl;
+        return 0;
+    }
 
+    std::string filename_str = argv[1];
     client_socket Client("10.0.0.1",9000);
-    Client._open();
-    Client._connect();
+    Client.open_();
+    Client.connect_();
+
+
 
     /*Send test message*/
-    cout << "Attempting to send message to server.." << endl;
-    Client._sendMessage("Hello world!");
-    Client._listen();
+    cout << "Requesting " << filename_str << " from server.." << endl;
+    Client.sendMessage((char*)filename_str.c_str());
+    Client.listen_();
 
     return 0;
 

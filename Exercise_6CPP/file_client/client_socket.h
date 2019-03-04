@@ -1,21 +1,26 @@
 #ifndef CLIENT_SOCKET_H
 #define CLIENT_SOCKET_H
-#include </root/Git/IKN/Exercise_6CPP/file_server/bsocket.h>
+#include <string>
+#include <netinet/in.h>
 
-class client_socket:public bsocket
+class client_socket
 {
 public:
     client_socket(char* target_ip, int portno);
-    void _connect();
-    int _open() override;
-    void _listen() override;
+    void connect_();
+    int open_();
+    std::string listen_();
+    void sendMessage(char* str);
 
 protected:
-    int getSocketFd() override;
-    void listen_callback() override;
+    int getSocketFd();
 
 private:
-    struct hostent *_server;
+    struct hostent *server_;
+    struct sockaddr_in server_address_;
+    struct sockaddr_in client_address_;
+    int sockfd_, newsockfd_, portno_, clilen_, pid_;
+    char buffer_[256];
 };
 
 #endif // CLIENT_SOCKET_H

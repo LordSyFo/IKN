@@ -17,69 +17,72 @@ using namespace std;
 
 client_socket::client_socket(char* target_ip, int portno)
 {
-
-
     /*Defintions*/
     cout << "Initializing variables.." << endl;
-    _server = gethostbyname(target_ip);
-    cout << "Retrieved host " << _server->h_name << ".." <<endl;
+    server_ = gethostbyname(target_ip);
+    cout << "Retrieved host " << server_->h_name << ".." <<endl;
 
     cout << "Setting up server address.." << endl;
         /*Set up server address*/
-    bzero((char*) &_server_address, sizeof(_server_address));
-    _server_address.sin_family = AF_INET;
+    bzero((char*) &server_address_, sizeof(server_address_));
+    server_address_.sin_family = AF_INET;
 
     cout << "Copying address to server->h_addr.." << endl;
-    bcopy((char*)_server->h_addr,
-         (char*)&_server_address.sin_addr.s_addr,
-         _server->h_length);
+    bcopy((char*)server_->h_addr,
+         (char*)&server_address_.sin_addr.s_addr,
+         server_->h_length);
 
     cout << "Assigning server port.." << endl;
-    _server_address.sin_port = htons(portno);
+    server_address_.sin_port = htons(portno);
 }
 
-<<<<<<< HEAD
-client_socket::_connect()
-=======
-void client_socket::_connect()
->>>>>>> a1d8b8519761029f799bed4c21217c013aa45555
+
+void client_socket::connect_()
 {
     /*Connect to server*/
     cout << "Connecting to server.." << endl;
-    if (connect(_sockfd,(const sockaddr*)&_server_address,sizeof(_server_address))<0)
+    if (connect(sockfd_,(const sockaddr*)&server_address_,sizeof(server_address_))<0)
     {
         error("ERROR connecting to server");
     }
 
     /*Print debug-info*/
     cout << "Server information:" << endl;
-    cout << "IP4: " << _server_address.sin_addr.s_addr <<endl;
-    cout << "Port: " << _server_address.sin_port <<endl;
+    cout << "IP4: " << server_address_.sin_addr.s_addr <<endl;
+    cout << "Port: " << server_address_.sin_port <<endl;
 }
 
 int client_socket::getSocketFd()
 {
-    return _sockfd;
+    return sockfd_;
 }
 
-int client_socket::_open()
+int client_socket::open_()
 {
     /*Open socket */
     cout << "Opening socket.." << endl;
-    _sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if (_sockfd<0)
+    sockfd_ = socket(AF_INET,SOCK_STREAM,0);
+    if (sockfd_<0)
     {
         error("ERROR opening socket!");
     }
 }
 
-void client_socket:: _listen()
+void client_socket::sendMessage(char* str)
 {
-    listen_callback();
-    cout << _buffer;
+    int n = write(getSocketFd(),str,strlen(str));
+    if (n < 0)
+    {
+        error("ERROR Writing to socket!");
+    }
 }
 
-void client_socket::listen_callback()
+std::string client_socket::listen_()
 {
-    _recieve();
+    if(0>read(getSocketFd(), buffer_, 255)){
+        error("ERROR reading from socket");
+        return "";
+    } else {
+        return buffer_;
+    }
 }
