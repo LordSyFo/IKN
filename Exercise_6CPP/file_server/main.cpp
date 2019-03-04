@@ -10,6 +10,8 @@
 #include <iostream>
 #include "message.h"
 #include <unistd.h>
+#include <string.h>
+#include <fstream>
 
 using namespace std;
 
@@ -78,15 +80,26 @@ int main(int argc, char *argv[])
                 /*Begin to transmit messages*/
                 vector<char*>(messages) = myMessage.getMessages();
                 int count = 0;
+                /*
                 cout << "Sending " << messages.size() << " messages!" << endl;
                 for(vector<char*>::iterator i = messages.begin(); i != messages.end(); ++i) {
                     cout << count++ << endl;
                     //cout << "Message size: " << strlen(i) << endl;
                     Server.sendMessage(*i,1000);
-                    usleep(10000);   //Sleep to prevent massflood
+                    usleep(500);   //Sleep for debug
+                }
+                */
+                cout << "Finished transmitting data!" << endl;
+
+                char* buffer = new char[fm.fileSize];
+                for(vector<char*>::iterator i = messages.begin()+1; i != messages.end(); ++i) {
+                    strcat(buffer,*i);
                 }
 
-                cout << "Finished transmitting data!" << endl;
+                //FÅR EN MÆRKELIG KOPI UD?? HMMM
+                fm.data = buffer;
+                cout << fm.data << endl;
+                FileH.makeFileFromBinary(fm,"testcpy");
 
             } else
             {

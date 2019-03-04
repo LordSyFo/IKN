@@ -25,29 +25,31 @@ message::message(fileHandler file, string fileName, int sendLength)
     /*Append header to message vector*/
     char* header = new char[256];
     sprintf(header,
-            "Size: %d\nType: %s\n",
+            "Size:%d\nType:%s\n",
             file.getSize(fileName),
             file.getType(fileName).c_str());
     _messages.push_back(header);
 
     /*Append files in sentLengths*/
     size_t len = file.getSize(fileName);
-    size_t iterations = ceil(len / sendLength); /*Round up*/
     char* fileStr = file.openFile(fileName);
-    char buffer[1001];
-    cout << "Iterations: " << iterations << endl;
+    char buffer[1000];
+    int catted = 0;
 
-    for (size_t i = 0; i <= iterations*sendLength; i+= sendLength)
+    while(catted < len)
     {
-        if (i+sendLength > len)
+        if (catted+1000 > len)
         {
-            cout << "2Inserted " << i << " to " << i+sendLength-(i+sendLength-len) << endl;
-            _messages.push_back(strncpy(buffer,fileStr+i,sendLength-(i+sendLength-len)));
+        memcpy(buffer, fileStr+catted,sendLength-(catted+sendLength-len));
+        _messages.push_back(buffer);
+        catted += sendLength-(catted+sendLength-len);
         } else
         {
-        _messages.push_back(strncpy(buffer,fileStr+i,sendLength));
-        cout << "Inserted " << i << " to " << sendLength+i << endl;
+        memcpy(buffer,fileStr+catted,sendLength);
+        _messages.push_back(buffer);
+        catted += 1000;
         }
+        cout << "Catted " << catted << " / " << len << endl;
     }
 
     cout << "File size: " << len << endl;
