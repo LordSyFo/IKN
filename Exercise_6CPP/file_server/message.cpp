@@ -89,15 +89,6 @@ file_message message::parseFileMessage(vector<char*>message)
     tmpmss.fileSize = stoi(findField("Size:",message[0]));
     tmpmss.fileType = findField("Type:",message[0]);
 
-    char* buffer = new char[tmpmss.fileSize];
-
-    /*Parse all of data to one string and into file_message structure*/
-    for (int i = 1; i < message.size(); i++)
-    {
-        strcat(buffer,message[i]);
-    }
-    tmpmss.data = buffer;
-
     return tmpmss;
 }
 

@@ -11,6 +11,7 @@
 #include <cmath>
 #include <string.h>
 #include <stdlib.h>
+#include <sstream>
 
 using namespace std;
 
@@ -46,7 +47,7 @@ int main(int argc, char *argv[])
     messages.push_back(header);
 
     /*If header isn't empty listen to rest of messages*/
-    if (!strcmp(header,""))
+    if (strcmp(header,"")!=0)
     {
         /*Parse message to get fields including file-size*/
         cout << "Recieved header.." << endl;
@@ -59,31 +60,31 @@ int main(int argc, char *argv[])
         recieved    = 0;   //Reset bytes recieved var
         int i       = 0;
 
+        char* file_string = new char[fm.fileSize];
+
         while(recieved < fm.fileSize)
         {
             /*Dont read 1000 characters if it exceeds filesize*/
             if (recieved+sendLength>fm.fileSize)
             {
-                messages.push_back(Client.listen_(&recieved,sendLength-(recieved+sendLength-fm.fileSize)));
+                strcat(file_string,Client.listen_(&recieved,sendLength-(recieved+sendLength-fm.fileSize)));
             } else
             {
-                messages.push_back(Client.listen_(&recieved,1000));
+                strcat(file_string,Client.listen_(&recieved,1000));
             }
             cout << i << endl;
             //system("CLS");
             cout << "Messages recieved: " << messages.size() << endl;
             cout << "Recieved: " << recieved << " / " << fm.fileSize << endl;
-            cout << messages[0] << endl;
             i++;
         }
 
-        cout << "Finished recieving file!" << endl;
-        fm = myMessage.parseFileMessage(messages);
+        fm.data = file_string;
 
+        cout << "Finished recieving file!" << endl;
         cout << "-----FILE INFORMATION-----" << endl;
         cout << "Size: " << fm.fileSize << endl;
         cout << "Type: " << fm.fileType << endl;
-        //cout << "Recieved bytes: " << fm.data.length() << endl;
     }
 
     return 0;
