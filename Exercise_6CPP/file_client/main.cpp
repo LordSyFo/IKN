@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     messages.push_back(header);
 
     /*If header isn't empty listen to rest of messages*/
-    if (header != "")
+    if (!strcmp(header,""))
     {
         /*Parse message to get fields including file-size*/
         cout << "Recieved header.." << endl;
@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
         cout << "Header string length: " << strlen(header) <<endl;
         cout << "Filesize: " << fm.fileSize << endl;
-        size_t iterations = ceil(fm.fileSize/sendLength);
+        //size_t iterations = ceil(fm.fileSize/sendLength);
         recieved    = 0;   //Reset bytes recieved var
         int i       = 0;
 
@@ -73,11 +73,12 @@ int main(int argc, char *argv[])
             //system("CLS");
             cout << "Messages recieved: " << messages.size() << endl;
             cout << "Recieved: " << recieved << " / " << fm.fileSize << endl;
+            cout << messages[0] << endl;
             i++;
         }
 
         cout << "Finished recieving file!" << endl;
-        fm = myMessage.parseFileMessage(&messages);
+        fm = myMessage.parseFileMessage(messages);
 
         cout << "-----FILE INFORMATION-----" << endl;
         cout << "Size: " << fm.fileSize << endl;

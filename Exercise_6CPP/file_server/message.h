@@ -13,7 +13,7 @@ public:
     void printMessage(int i);
     int getNumberOfMessages();
     std::vector<char*> getMessages();
-    file_message parseFileMessage(std::vector<char*>message);
+    file_message parseFileMessage(std::vector<char *>message);
 
 private:
     std::vector<char*>_messages;
