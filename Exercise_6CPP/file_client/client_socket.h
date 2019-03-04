@@ -9,7 +9,7 @@ public:
     client_socket(char* target_ip, int portno);
     void connect_();
     int open_();
-    std::string listen_();
+    char *listen_(int* bytecount,int no_b_read);
     void sendMessage(char* str);
 
 protected:
@@ -20,7 +20,7 @@ private:
     struct sockaddr_in server_address_;
     struct sockaddr_in client_address_;
     int sockfd_, newsockfd_, portno_, clilen_, pid_;
-    char buffer_[256];
+    char buffer_[2048];
 };
 
 #endif // CLIENT_SOCKET_H

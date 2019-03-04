@@ -77,9 +77,12 @@ void client_socket::sendMessage(char* str)
     }
 }
 
-std::string client_socket::listen_()
+char* client_socket::listen_(int* byte_count, int no_b_read)
 {
-    if(0>read(getSocketFd(), buffer_, 255)){
+    int n = recv(getSocketFd(), buffer_, no_b_read,0);
+    *byte_count += n;
+
+    if(0>n){
         error("ERROR reading from socket");
         return "";
     } else {

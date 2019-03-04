@@ -79,6 +79,8 @@ file_message message::parseFileMessage(vector<char*>message)
 {
     file_message tmpmss;
 
+    cout << message[0] << endl;
+
     /*Find and add filesize*/
     tmpmss.fileSize = stoi(findField("Size:",message[0]));
     tmpmss.fileType = findField("Type:",message[0]);
