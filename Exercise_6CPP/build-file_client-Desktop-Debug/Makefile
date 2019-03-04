@@ -52,10 +52,14 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../file_client/main.cpp \
 		../file_client/client_socket.cpp \
-		../file_server/bsocket.cpp 
+		../file_server/bsocket.cpp \
+		../file_server/filehandler.cpp \
+		../file_server/message.cpp 
 OBJECTS       = main.o \
 		client_socket.o \
-		bsocket.o
+		bsocket.o \
+		filehandler.o \
+		message.o
 DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -125,9 +129,13 @@ DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/lex.prf \
 		../file_client/file_client.pro client_socket.h \
-		../file_server/bsocket.h ../file_client/main.cpp \
+		../file_server/bsocket.h \
+		../file_server/filehandler.h \
+		../file_server/message.h ../file_client/main.cpp \
 		../file_client/client_socket.cpp \
-		../file_server/bsocket.cpp
+		../file_server/bsocket.cpp \
+		../file_server/filehandler.cpp \
+		../file_server/message.cpp
 QMAKE_TARGET  = file_client
 DESTDIR       = 
 TARGET        = file_client
@@ -322,15 +330,22 @@ compiler_clean:
 ####### Compile
 
 main.o: ../file_client/main.cpp ../file_client/client_socket.h \
-		/root/Git/IKN/Exercise_6CPP/file_server/bsocket.h
+		/root/Git/IKN/Exercise_6CPP/file_server/message.h \
+		../file_server/filehandler.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../file_client/main.cpp
 
-client_socket.o: ../file_client/client_socket.cpp ../file_client/client_socket.h \
-		/root/Git/IKN/Exercise_6CPP/file_server/bsocket.h
+client_socket.o: ../file_client/client_socket.cpp ../file_client/client_socket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o client_socket.o ../file_client/client_socket.cpp
 
 bsocket.o: ../file_server/bsocket.cpp ../file_server/bsocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/bsocket.cpp
+
+filehandler.o: ../file_server/filehandler.cpp ../file_server/filehandler.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filehandler.o ../file_server/filehandler.cpp
+
+message.o: ../file_server/message.cpp ../file_server/message.h \
+		../file_server/filehandler.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o message.o ../file_server/message.cpp
 
 ####### Install
 

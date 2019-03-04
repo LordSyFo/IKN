@@ -8,7 +8,9 @@
 using namespace std;
 
 message::message()
-{}
+{
+    cout << "Making default message object.." << endl;
+}
 
 message::message(fileHandler file, string fileName, int sendLength)
 {
