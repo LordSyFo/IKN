@@ -7,7 +7,7 @@
 
 using namespace std;
 
-message::message(fileHandler file, string fileName,int sendLength)
+message::message(fileHandler file, string fileName, int sendLength)
 {
     if (!file.checkForFile(fileName))
     {
@@ -18,7 +18,8 @@ message::message(fileHandler file, string fileName,int sendLength)
 
     /*Append header to message vector*/
     stringstream header;
-    header << "Size: " << file.getSize(fileName) << '\n';
+    header << "Size:" << file.getSize(fileName) << '\n';
+    header << "Type:" << file.getType(fileName) << '\n';
     _messages.push_back(header.str());
 
     /*Append files in sentLengths*/
@@ -71,6 +72,7 @@ file_message message::parseFileMessage(vector<std::string>message)
 
     /*Find and add filesize*/
     tmpmss.fileSize = stoi(findField("Size:",message[0]));
+    tmpmss.fileType = findField("Type:",message[0]);
 
     /*Parse all of data to one string and into file_message structure*/
     for (int i = 1; i < message.size(); i++)

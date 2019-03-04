@@ -3,6 +3,13 @@
 #include <vector>
 #include <string>
 
+typedef struct file_message
+{
+    int fileSize = 0;
+    std::string fileType;
+    std::string data;
+} file_message;
+
 class fileHandler
 {
 public:
@@ -12,8 +19,8 @@ public:
     bool checkForFile(const std::string str);
     std::string openFile(const std::string);
     int getSize(std::string str);
-    int makeFileFromString(std::string binary, std::string type); TODO!!
-     
+    std::string getType(std::string str);
+    int makeFileFromBinary(file_message fm, std::string fileName);
 
 private:
     std::vector<std::string> files;

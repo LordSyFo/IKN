@@ -59,14 +59,17 @@ int main(int argc, char *argv[])
     file_message fm;
     fm = myMessage.parseFileMessage(myMessage.getMessages());
     cout << "Size of file: " << fm.fileSize << endl;
-    cout << "Size of datastring: " << fm.data.size() << endl;
+    cout << "Extension of file: " << fm.fileType << endl;
+    //cout << "Datastring: " << fm.data << endl;
 
-//    /*Make socket object*/
-//    bsocket Server("10.0.0.1",9000);
+    FileH.makeFileFromBinary(fm,"test");
 
-//    /*Open socket*/
-//    Server._open();
-//    Server._listen();
+    /*Make socket object*/
+    bsocket Server("10.0.0.1",9000);
+
+    /*Open socket*/
+    Server._open();
+    Server._listen();
 
     return 0;
 }
