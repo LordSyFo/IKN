@@ -23,10 +23,12 @@ message::message(fileHandler file, string fileName, int sendLength)
     }
 
     /*Append header to message vector*/
-    stringstream header;
-    header << "Size:" << file.getSize(fileName) << '\n';
-    header << "Type:" << file.getType(fileName) << '\n';
-    _messages.push_back((char*)(header.str()).c_str());
+    char* header = new char[256];
+    sprintf(header,
+            "Size: %d\nType: %s\n",
+            file.getSize(fileName),
+            file.getType(fileName).c_str());
+    _messages.push_back(header);
 
     /*Append files in sentLengths*/
     size_t len = file.getSize(fileName);
@@ -39,11 +41,13 @@ message::message(fileHandler file, string fileName, int sendLength)
     {
         if (i+sendLength > len)
         {
-            cout << "2Inserted " << i << " to " << i+sendLength-len << endl;
-            _messages.push_back(strncpy(buffer,fileStr+i,i-len));
-        }
+            cout << "2Inserted " << i << " to " << i+sendLength-(i+sendLength-len) << endl;
+            _messages.push_back(strncpy(buffer,fileStr+i,sendLength-(i+sendLength-len)));
+        } else
+        {
         _messages.push_back(strncpy(buffer,fileStr+i,sendLength));
         cout << "Inserted " << i << " to " << sendLength+i << endl;
+        }
     }
 
     cout << "File size: " << len << endl;

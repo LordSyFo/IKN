@@ -105,7 +105,7 @@ int bsocket::getSocketFd()
 void bsocket::sendMessage(char* str,int no_bytes)
 {
     cout<<"Message length in sendMessage(): "<<strlen(str)<<endl;
-    int n = write(getSocketFd(),str,no_bytes);
+    int n = send(getSocketFd(),str,no_bytes,0);
     if (n < 0)
     {
         error("ERROR Writing to socket!");
