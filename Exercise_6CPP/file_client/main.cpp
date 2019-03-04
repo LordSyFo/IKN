@@ -68,9 +68,11 @@ int main(int argc, char *argv[])
             if (recieved+sendLength>fm.fileSize)
             {
                 strcat(file_string,Client.listen_(&recieved,sendLength-(recieved+sendLength-fm.fileSize)));
+                //cout << file_string << endl;
             } else
             {
                 strcat(file_string,Client.listen_(&recieved,1000));
+                //cout << file_string << endl;
             }
             cout << i << endl;
             //system("CLS");
@@ -85,6 +87,10 @@ int main(int argc, char *argv[])
         cout << "-----FILE INFORMATION-----" << endl;
         cout << "Size: " << fm.fileSize << endl;
         cout << "Type: " << fm.fileType << endl;
+
+        /*Make file*/
+        fileHandler fh;
+        fh.makeFileFromBinary(fm,"copy_file");
     }
 
     return 0;

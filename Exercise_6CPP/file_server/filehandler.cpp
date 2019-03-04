@@ -91,7 +91,7 @@ int fileHandler::makeFileFromBinary(file_message fm, string fileName)
 
     if (out.tellp() == fm.fileSize)
     {
-        cout << "Succesfully made " << fileName << "." << fm.fileType << "!" << endl;
+        cout << "Succesfully made " << sstr.str() << "!" << endl;
         return 1;
     } else {
         cout << "Failed making " << fileName << "." << fm.fileType << "!" << endl;
