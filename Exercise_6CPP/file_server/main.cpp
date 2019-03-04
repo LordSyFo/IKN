@@ -39,43 +39,44 @@ void error(char* str)
  */
 int main(int argc, char *argv[])
 {
-
-    fileHandler FileH;
-    FileH.printFiles();
-    string file = "Picture1.jpg";
-    if (FileH.checkForFile(file))
-    {
-        //cout << FileH.openFile(file) << endl;
-        cout << FileH.getSize(file) << endl;
-    } else
-    {
-        cout << file << " doesnt exist!" << endl;
-    }
-
-    /*Make message*/
-    message myMessage(FileH, file, 1000);
-    myMessage.printMessage(0);
-    cout << myMessage.getNumberOfMessages() << " : " << (double)FileH.getSize(file)/1000.0 << endl;
-    file_message fm;
-    fm = myMessage.parseFileMessage(myMessage.getMessages());
-    cout << "Size of file: " << fm.fileSize << endl;
-    cout << "Extension of file: " << fm.fileType << endl;
     //cout << "Datastring: " << fm.data << endl;
 
-    FileH.makeFileFromBinary(fm,"test");
+    //FileH.makeFileFromBinary(fm,"test");
+
+    fileHandler FileH;
+    cout << "Available files: " << endl;
+    FileH.printFiles();
 
     /*Make socket object*/
     bsocket Server("10.0.0.1",9000);
 
     /*Open socket*/
     Server._open();
+    string str_buffer;
     while(1)
     {
         /*Wait for request from client*/
-        if (Server._listen() != "")
+        str_buffer = Server._listen();
+        if (str_buffer != "")
         {
-            cout << "Checking for recieved requested file.." << endl;
+            cout << "Checking for requested file: " << str_buffer << ".." << endl;
+            if (FileH.checkForFile(str_buffer))
+            {
+                //cout << FileH.openFile(file) << endl;
+                cout << FileH.getSize(str_buffer) << endl;
+                /*Make message*/
+                message myMessage(FileH, str_buffer, 1000);
+                myMessage.printMessage(0);
+                cout << myMessage.getNumberOfMessages() << " : " << (double)FileH.getSize(str_buffer)/1000.0 << endl;
+                file_message fm;
+                fm = myMessage.parseFileMessage(myMessage.getMessages());
+                cout << "Size of file: " << fm.fileSize << endl;
+                cout << "Extension of file: " << fm.fileType << endl;
 
+            } else
+            {
+                cout << str_buffer << " doesnt exist!" << endl;
+            }
         }
     }
     return 0;

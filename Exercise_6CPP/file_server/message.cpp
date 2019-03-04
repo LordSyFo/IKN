@@ -7,6 +7,9 @@
 
 using namespace std;
 
+message::message()
+{}
+
 message::message(fileHandler file, string fileName, int sendLength)
 {
     if (!file.checkForFile(fileName))

@@ -7,6 +7,7 @@
 class message
 {
 public:
+    message();
     message(fileHandler,std::string, int);
     void printAllMessages();
     void printMessage(int i);
