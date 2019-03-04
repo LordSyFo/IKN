@@ -9,6 +9,7 @@
 #include "filehandler.h"
 #include <iostream>
 #include "message.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -64,6 +65,7 @@ int main(int argc, char *argv[])
             {
                 //cout << FileH.openFile(file) << endl;
                 cout << FileH.getSize(str_buffer) << endl;
+
                 /*Make message*/
                 message myMessage(FileH, str_buffer, 1000);
                 myMessage.printMessage(0);
@@ -72,6 +74,19 @@ int main(int argc, char *argv[])
                 fm = myMessage.parseFileMessage(myMessage.getMessages());
                 cout << "Size of file: " << fm.fileSize << endl;
                 cout << "Extension of file: " << fm.fileType << endl;
+
+                /*Begin to transmit messages*/
+                vector<char*>(messages) = myMessage.getMessages();
+                int count = 0;
+                cout << "Sending " << messages.size() << " messages!" << endl;
+                for(vector<char*>::iterator i = messages.begin(); i != messages.end(); ++i) {
+                    cout << count++ << endl;
+                    //cout << "Message size: " << strlen(i) << endl;
+                    Server.sendMessage(*i,1000);
+                    usleep(10000);   //Sleep to prevent massflood
+                }
+
+                cout << "Finished transmitting data!" << endl;
 
             } else
             {

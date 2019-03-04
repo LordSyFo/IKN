@@ -12,11 +12,11 @@ public:
     void printAllMessages();
     void printMessage(int i);
     int getNumberOfMessages();
-    std::vector<std::string> getMessages();
-    file_message parseFileMessage(std::vector<std::string>message);
+    std::vector<char*> getMessages();
+    file_message parseFileMessage(std::vector<char*>message);
 
 private:
-    std::vector<std::string>_messages;
+    std::vector<char*>_messages;
     file_message _fmess;
     fileHandler test;
 

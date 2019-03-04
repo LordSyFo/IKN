@@ -4,6 +4,7 @@
 #include "filehandler.h"
 #include <cmath>
 #include <iostream>
+#include <string.h>
 
 using namespace std;
 
@@ -25,25 +26,28 @@ message::message(fileHandler file, string fileName, int sendLength)
     stringstream header;
     header << "Size:" << file.getSize(fileName) << '\n';
     header << "Type:" << file.getType(fileName) << '\n';
-    _messages.push_back(header.str());
+    _messages.push_back((char*)(header.str()).c_str());
 
     /*Append files in sentLengths*/
     size_t len = file.getSize(fileName);
     size_t iterations = ceil(len / sendLength); /*Round up*/
-    string fileStr = file.openFile(fileName);
+    char* fileStr = file.openFile(fileName);
+    char buffer[1001];
+    cout << "Iterations: " << iterations << endl;
 
     for (size_t i = 0; i <= iterations*sendLength; i+= sendLength)
     {
-        if (i + sendLength > len)
+        if (i+sendLength > len)
         {
-            _messages.push_back(fileStr.substr(i, (size_t)len));
-            //cout << "Inserted " << i << " to " << len << endl;
-        } else
-        {
-            _messages.push_back(fileStr.substr(i, sendLength));
-            //cout << "Inserted " << i << " to " << i + sendLength << endl;
+            cout << "2Inserted " << i << " to " << i+sendLength-len << endl;
+            _messages.push_back(strncpy(buffer,fileStr+i,i-len));
         }
+        _messages.push_back(strncpy(buffer,fileStr+i,sendLength));
+        cout << "Inserted " << i << " to " << sendLength+i << endl;
     }
+
+    cout << "File size: " << len << endl;
+    cout << "Message size: " << _messages.size() << endl;
 }
 
 void message::printMessage(int i)
@@ -71,7 +75,7 @@ void message::printAllMessages()
     }
 }
 
-file_message message::parseFileMessage(vector<std::string>message)
+file_message message::parseFileMessage(vector<char*>message)
 {
     file_message tmpmss;
 
@@ -79,16 +83,19 @@ file_message message::parseFileMessage(vector<std::string>message)
     tmpmss.fileSize = stoi(findField("Size:",message[0]));
     tmpmss.fileType = findField("Type:",message[0]);
 
+    char* buffer = new char[tmpmss.fileSize];
+
     /*Parse all of data to one string and into file_message structure*/
     for (int i = 1; i < message.size(); i++)
     {
-        tmpmss.data.append(message[i]);
+        strcat(buffer,message[i]);
     }
+    tmpmss.data = buffer;
 
     return tmpmss;
 }
 
-vector<string> message::getMessages()
+vector<char*> message::getMessages()
 {
     return _messages;
 }

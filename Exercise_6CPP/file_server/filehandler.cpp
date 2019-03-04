@@ -22,12 +22,28 @@ void fileHandler::printFiles()
         cout << *it << endl;
 }
 
-string fileHandler::openFile(string fileName)
+char* fileHandler::openFile(string fileName)
 {
-    ifstream fin(fileName.insert(0,fileDir), ios::binary);
-    stringstream sstr;
-    sstr << fin.rdbuf();
-    return sstr.str();
+    char* buffer; long filesize;
+
+    /*Open file in stream*/
+    ifstream fin(fileName.insert(0,fileDir),ios::in|ios::binary|ios::ate);
+
+    /*Get size of file and reset to begin*/
+    filesize = fin.tellg();
+    fin.seekg(0,ios::beg);
+
+    /*Allocate filesize in char array buffer*/
+    buffer = new char[filesize];
+
+    /*Read file binary into buffer*/
+    fin.read(buffer,filesize);
+    fin.close();
+
+    /*Save filesize in attribute*/
+    filesize_ = filesize;
+
+    return buffer;
 }
 
 int fileHandler::updateFilesInCurrentFolder()
@@ -53,8 +69,12 @@ int fileHandler::getSize(std::string str)
 {
     if (checkForFile(str))
     {
-        string temp = openFile(str);
-        return temp.length();
+        /*Open file in stream*/
+        ifstream fin(str.insert(0,fileDir),ios::in|ios::binary|ios::ate);
+        /*Get size of file*/
+        long size = fin.tellg();
+        fin.close();
+        return size;
     }
     return -1;
 }
@@ -67,7 +87,7 @@ int fileHandler::makeFileFromBinary(file_message fm, string fileName)
     ofstream out(sstr.str(), ios::binary);
 
     /*Append binary file data to file*/
-    out << fm.data;
+    out.write(fm.data, fm.fileSize);
 
     if (out.tellp() == fm.fileSize)
     {

@@ -13,7 +13,7 @@ public:
     virtual std::string _listen();
     virtual int _open();
     void _awkToClient();
-    void _sendMessage(char* str);
+    void sendMessage(char* str,int no_bytes);
     ~bsocket();
 
 protected:
