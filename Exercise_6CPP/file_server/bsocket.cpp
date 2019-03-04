@@ -22,15 +22,15 @@ bsocket::bsocket(char* ip, int portno)
 {
     cout << "Initializing variables.." << endl;
     /*Declarations and assignments*/
-    bzero((char*) &_server_address, sizeof(_server_address)); //Fill address with zeros
-    _portno = portno;
+    bzero((char*) &server_address_, sizeof(server_address_)); //Fill address with zeros
+    portno_ = portno;
 
     cout << "Initializing server structures.." << endl;
     /*Fill server address struct*/
-    _server_address.sin_family       = AF_INET;
-    _server_address.sin_port         = htons(_portno);
+    server_address_.sin_family       = AF_INET;
+    server_address_.sin_port         = htons(portno_);
 
-    if (!inet_pton(AF_INET, ip, &_server_address.sin_addr))  //Host IP ETH1
+    if (!inet_pton(AF_INET, ip, &server_address_.sin_addr))  //Host IP ETH1
     {
         error("ERROR Converting text-address to binary");
     };
@@ -38,10 +38,10 @@ bsocket::bsocket(char* ip, int portno)
 
 int bsocket::_open()
 {
-    cout << "Creating/Opening socket on " << _server_address.sin_addr.s_addr << ":" << _server_address.sin_port <<endl;
+    cout << "Creating/Opening socket on " << server_address_.sin_addr.s_addr << ":" << server_address_.sin_port <<endl;
     /*Create socket*/
-    _sockfd = socket(AF_INET,SOCK_STREAM,0);
-    if (_sockfd<0)
+    sockfd_ = socket(AF_INET,SOCK_STREAM,0);
+    if (sockfd_<0)
     {
         error("ERROR Opening socket!");
         return 0;
@@ -49,7 +49,7 @@ int bsocket::_open()
 
     cout << "Binding socket to address.." << endl;
     /*Bind socket to address*/
-    if (bind(_sockfd, (struct sockaddr*) &_server_address, sizeof(_server_address)) < 0)
+    if (bind(sockfd_, (struct sockaddr*) &server_address_, sizeof(server_address_)) < 0)
     {
         error("ERROR Binding socket to address!");
         return 0;
@@ -58,52 +58,30 @@ int bsocket::_open()
     return 1;
 }
 
-void bsocket::_listen()
+std::string bsocket::_listen()
 {
 
-    cout << "Listening for message.." << endl;
+    //cout << "Listening for message.." << endl;
     /*Listen for server*/
-    listen(_sockfd,5);   //Maybe change 1 to 5
+    listen(sockfd_,5);   //Maybe change 1 to 5
 
     /*Wait for client-connection*/
-    while(keepOpen)
+    clilen_      = sizeof(client_address_);
+    newsockfd_   = accept(sockfd_,(struct sockaddr*) &client_address_, (socklen_t*)&clilen_);
+
+    if (newsockfd_ < 0 )
     {
-        _clilen      = sizeof(_client_address);
-        _newsockfd   = accept(_sockfd,(struct sockaddr*) &_client_address, (socklen_t*)&_clilen);
-        if (_newsockfd < 0 )
-        {
-            error("ERROR on accept!");
-        }
-        _pid = fork();
-        if(_pid < 0)
-        {
-            error("ERROR on fork!");
-        }
-        if (_pid == 0)
-        {
-            close(_sockfd);
-            listen_callback();
-            exit(0);
-        }
+        error("ERROR on accept!");
     }
-}
 
-void bsocket::listen_callback()
-{
-    _recieve();
-    cout << "Recieved: " << _buffer;
-    _awkToClient();
-}
-
-void bsocket::_recieve()
-{
-    int n;
     /*Read from socket*/
-    bzero(_buffer,256);
-    n = read(getSocketFd(),_buffer,255);
+    bzero(buffer_,256);
+    int n = read(getSocketFd(),buffer_,255);
     if (n < 0) {
         error("ERROR reading from socket");
     }
+
+    return buffer_;
 }
 
 void bsocket::_awkToClient()
@@ -111,8 +89,8 @@ void bsocket::_awkToClient()
     /*AWK to client*/
     int n;
     cout << "Attempting to AWK back to client!" << endl;
-    strcpy(_buffer,"I got your message!");
-    n = write(getSocketFd(),_buffer,strlen(_buffer));
+    strcpy(buffer_,"I got your message!");
+    n = write(getSocketFd(),buffer_,strlen(buffer_));
     if (n < 0)
     {
         error("ERROR Writing AWK back to client!");
@@ -121,7 +99,7 @@ void bsocket::_awkToClient()
 
 int bsocket::getSocketFd()
 {
-    return _newsockfd;
+    return newsockfd_;
 }
 
 void bsocket::_sendMessage(char* str)
@@ -133,21 +111,14 @@ void bsocket::_sendMessage(char* str)
     }
 }
 
-/**
- * Sender filen som har navnet fileName til klienten
- *
- * @param fileName Filnavn som skal sendes til klienten
- * @param fileSize Størrelsen på filen, 0 hvis den ikke findes
- * @param outToClient Stream som der skrives til socket
-     */
-void bsocket::sendFile(string fileName, long fileSize, int outToClient)
-{
-    // TO DO Your own code
-}
-
-
 void bsocket::error(const char* str)
 {
     perror(str);
     exit(1);
+}
+
+bsocket::~bsocket()
+{
+    /*Close sockets*/
+    close(newsockfd_);close(sockfd_);
 }

@@ -69,8 +69,15 @@ int main(int argc, char *argv[])
 
     /*Open socket*/
     Server._open();
-    Server._listen();
+    while(1)
+    {
+        /*Wait for request from client*/
+        if (Server._listen() != "")
+        {
+            cout << "Checking for recieved requested file.." << endl;
 
+        }
+    }
     return 0;
 }
 

@@ -9,18 +9,18 @@ public:
     bsocket();
     bsocket(char* ip, int portno);
     void sendFile(std::string fileName, long fileSize, int outToClient);
-    virtual void _recieve();
     void error(const char* str);
-    virtual void _listen();
+    virtual std::string _listen();
     virtual int _open();
     void _awkToClient();
     void _sendMessage(char* str);
+    ~bsocket();
 
 protected:
-    char _buffer[256];
-    struct sockaddr_in _server_address;
-    struct sockaddr_in _client_address;
-    int _sockfd, _newsockfd, _portno, _clilen, _pid;
+    char buffer_[256];
+    struct sockaddr_in server_address_;
+    struct sockaddr_in client_address_;
+    int sockfd_, newsockfd_, portno_, clilen_, pid_;
     bool keepOpen = true;
 
     /*Structure for sending packages*/
@@ -30,7 +30,6 @@ protected:
     };
 
     /*Private methods*/
-    virtual void listen_callback();
     virtual int getSocketFd();
 };
 
