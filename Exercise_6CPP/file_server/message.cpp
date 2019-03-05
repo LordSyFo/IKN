@@ -13,7 +13,7 @@ message::message()
     cout << "Making default message object.." << endl;
 }
 
-message::message(fileHandler file, string fileName, int sendLength)
+message::message(fileHandler file,string fileName, int sendLength)
 {
     if (!file.checkForFile(fileName))
     {
@@ -30,29 +30,7 @@ message::message(fileHandler file, string fileName, int sendLength)
             file.getType(fileName).c_str());
     _messages.push_back(header);
 
-    /*Append files in sentLengths*/
-    size_t len = file.getSize(fileName);
-    char* fileStr = file.openFile(fileName);
-    char buffer[1000];
-    int catted = 0;
-
-    while(catted < len)
-    {
-        if (catted+1000 > len)
-        {
-        memcpy(buffer, fileStr+catted,sendLength-(catted+sendLength-len));
-        _messages.push_back(buffer);
-        catted += sendLength-(catted+sendLength-len);
-        } else
-        {
-        memcpy(buffer,fileStr+catted,sendLength);
-        _messages.push_back(buffer);
-        catted += 1000;
-        }
-        cout << "Catted " << catted << " / " << len << endl;
-    }
-
-    cout << "File size: " << len << endl;
+    cout << "File size: " << file.getSize(fileName) << endl;
     cout << "Message size: " << _messages.size() << endl;
 }
 
@@ -92,6 +70,11 @@ file_message message::parseFileMessage(vector<char*>message)
     tmpmss.fileType = findField("Type:",message[0]);
 
     return tmpmss;
+}
+
+string message::getHeader()
+{
+    return _messages[0];
 }
 
 vector<char*> message::getMessages()

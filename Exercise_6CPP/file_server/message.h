@@ -14,6 +14,7 @@ public:
     int getNumberOfMessages();
     std::vector<char*> getMessages();
     file_message parseFileMessage(std::vector<char *>message);
+    std::string getHeader();
 
 private:
     std::vector<char*>_messages;

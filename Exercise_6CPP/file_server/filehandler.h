@@ -2,6 +2,7 @@
 #define FILEHANDLER_H
 #include <vector>
 #include <string>
+#include "bsocket.h"
 
 typedef struct file_message
 {
@@ -21,6 +22,7 @@ public:
     int getSize(std::string str);
     std::string getType(std::string str);
     int makeFileFromBinary(file_message fm, std::string fileName);
+    int sendFile(std::string header,bsocket server,std::string fileName, int chunksize);
 
 private:
     std::vector<std::string> files;

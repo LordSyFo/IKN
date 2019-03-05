@@ -7,6 +7,8 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
+#include "bsocket.h"
+#include <unistd.h>
 
 using namespace std;
 
@@ -77,6 +79,31 @@ int fileHandler::getSize(std::string str)
         return size;
     }
     return -1;
+}
+
+int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize)
+{
+    /*Read input file*/
+    ifstream fin(fileName, ios::binary | ios::ate);
+    long filesize = fin.tellg();
+    fin.seekg(0,ios::beg);
+
+    /*Define buffer*/
+    unsigned char *buffer = new unsigned char[chunksize];
+
+    /*Send header first*/
+    server.sendMessage((char*)header.c_str(),256); //TODO: make size dynamic
+
+    /*Read from file in chunks*/
+    while (fin.read((char*)buffer, chunksize))
+    {
+        /*Send in socket*/
+        server.sendMessage((char*)buffer,chunksize);
+        usleep(10000);  //Wait for debug
+    }
+
+    /*Close file handle*/
+    fin.close();
 }
 
 int fileHandler::makeFileFromBinary(file_message fm, string fileName)
