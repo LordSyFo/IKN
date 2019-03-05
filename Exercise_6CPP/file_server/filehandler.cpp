@@ -84,47 +84,47 @@ int fileHandler::getSize(std::string str)
 int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize)
 {
     /*Read input file*/
-    ifstream fin(fileName, ios::binary | ios::ate);
+    cout << "Reading " << fileName << endl;
+    ifstream fin(fileName.insert(0,fileDir), ios::binary | ios::ate);
     long filesize = fin.tellg();
     fin.seekg(0,ios::beg);
+    cout << "Size of file is: " << filesize << endl;
 
     /*Define buffer*/
     unsigned char *buffer = new unsigned char[chunksize];
+    cout << "Defined buffer" << endl;
 
     /*Send header first*/
     server.sendMessage((char*)header.c_str(),256); //TODO: make size dynamic
+    cout << "Sending header.." << endl;
+    usleep(100000);
+    int sendData = 0;
 
     /*Read from file in chunks*/
+    int i = 1;
     while (fin.read((char*)buffer, chunksize))
-    {
+    {   
         /*Send in socket*/
+        sendData += chunksize;
+        cout << "Send "<<sendData<< " bytes of data"<<endl;
         server.sendMessage((char*)buffer,chunksize);
+        i++;
+
+        /*If chunk is bigger than file truncate it*/
+        if (i*chunksize>filesize){
+            chunksize = filesize-(i-1)*chunksize;
+            cout << "Truncating chunksize to " << chunksize << endl;
+        }
+
         usleep(10000);  //Wait for debug
     }
 
+    cout << "Finished sending all file-data" << endl;
+
     /*Close file handle*/
     fin.close();
-}
 
-int fileHandler::makeFileFromBinary(file_message fm, string fileName)
-{
-    /*Make file name with correct file extension*/
-    stringstream sstr;
-    sstr << fileName << "." << fm.fileType;
-    ofstream out(sstr.str(), ios::binary);
-
-    /*Append binary file data to file*/
-    out.write(fm.data, fm.fileSize);
-
-    if (out.tellp() == fm.fileSize)
-    {
-        cout << "Succesfully made " << sstr.str() << "!" << endl;
-        return 1;
-    } else {
-        cout << "Failed making " << fileName << "." << fm.fileType << "!" << endl;
-        cout << "Missed " << fm.fileSize-out.tellp() << " bytes.. Try again!" << endl;
-        return 0;
-    }
+    return 1;
 }
 
 std::string fileHandler::getType(std::string str)

@@ -8,7 +8,7 @@ typedef struct file_message
 {
     int fileSize = 0;
     std::string fileType;
-    char* data;
+    char* fileName;
 } file_message;
 
 class fileHandler
@@ -21,7 +21,6 @@ public:
     char* openFile(const std::string);
     int getSize(std::string str);
     std::string getType(std::string str);
-    int makeFileFromBinary(file_message fm, std::string fileName);
     int sendFile(std::string header,bsocket server,std::string fileName, int chunksize);
 
 private:

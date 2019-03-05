@@ -84,19 +84,6 @@ std::string bsocket::_listen()
     return buffer_;
 }
 
-void bsocket::_awkToClient()
-{
-    /*AWK to client*/
-    int n;
-    cout << "Attempting to AWK back to client!" << endl;
-    strcpy(buffer_,"I got your message!");
-    n = write(getSocketFd(),buffer_,strlen(buffer_));
-    if (n < 0)
-    {
-        error("ERROR Writing AWK back to client!");
-    }
-}
-
 int bsocket::getSocketFd()
 {
     return newsockfd_;
@@ -104,8 +91,8 @@ int bsocket::getSocketFd()
 
 void bsocket::sendMessage(char* str,int no_bytes)
 {
-    cout<<"Message length in sendMessage(): "<<strlen(str)<<endl;
-    int n = send(getSocketFd(),str,no_bytes,0);
+    //cout<<"Message length in sendMessage(): "<<strlen(str)<<endl;
+    int n = write(getSocketFd(),str,no_bytes);
     if (n < 0)
     {
         error("ERROR Writing to socket!");
@@ -115,6 +102,7 @@ void bsocket::sendMessage(char* str,int no_bytes)
         cout << "Couldn't send everything to client" << endl;
         cout << "Only sent " << n << " bytes.." << endl;
     }
+    cout<<"Succesfully send message"<<endl;
 }
 
 void bsocket::error(const char* str)
@@ -123,7 +111,7 @@ void bsocket::error(const char* str)
     exit(1);
 }
 
-bsocket::~bsocket()
+void bsocket::closeConnections()
 {
     /*Close sockets*/
     close(newsockfd_);close(sockfd_);

@@ -59,6 +59,7 @@ int main(int argc, char *argv[])
     while(1)
     {
         /*Wait for request from client*/
+        cout << "Listening for clients.." << endl;
         request_buffer = Server._listen();
         if (request_buffer != "")
         {
@@ -87,6 +88,7 @@ int main(int argc, char *argv[])
                 cout << request_buffer << " doesnt exist!" << endl;
             }
         }
+        cout << "Getting ready for new connections.." << endl;
     }
     return 0;
 }

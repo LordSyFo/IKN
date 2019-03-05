@@ -12,9 +12,8 @@ public:
     void error(const char* str);
     virtual std::string _listen();
     virtual int _open();
-    void _awkToClient();
     void sendMessage(char* str,int no_bytes);
-    ~bsocket();
+    void closeConnections();
 
 protected:
     char buffer_[256];
