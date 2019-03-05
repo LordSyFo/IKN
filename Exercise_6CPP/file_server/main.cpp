@@ -42,13 +42,13 @@ void error(char* str)
  */
 int main(int argc, char *argv[])
 {
-    //cout << "Datastring: " << fm.data << endl;
-
-    //FileH.makeFileFromBinary(fm,"test");
-
+    /*Make filehandler and find available files*/
     fileHandler FileH;
     cout << "Available files: " << endl;
     FileH.printFiles();
+
+    /*Define chunksize here:*/
+    int chunk_size = 1000;
 
     /*Make socket object*/
     bsocket Server("10.0.0.1",9000);
@@ -69,16 +69,17 @@ int main(int argc, char *argv[])
                 cout << FileH.getSize(request_buffer) << endl;
 
                 /*Make message*/
-                message myMessage(FileH, request_buffer, 1000);
+                message myMessage(FileH, request_buffer, chunk_size);
                 myMessage.printMessage(0);
-                cout << myMessage.getNumberOfMessages() << " : " << (double)FileH.getSize(request_buffer)/1000.0 << endl;
+
+                /*Make file_message struct for debugging purposes*/
                 file_message fm;
                 fm = myMessage.parseFileMessage(myMessage.getMessages());
                 cout << "Size of file: " << fm.fileSize << endl;
                 cout << "Extension of file: " << fm.fileType << endl;
 
                 /*Begin to transmit messages*/
-                FileH.sendFile(myMessage.getHeader(),Server,request_buffer,1000);
+                FileH.sendFile(myMessage.getHeader(),Server,request_buffer,1000,10000);
 
                 cout << "Finished transmitting data!" << endl;
 

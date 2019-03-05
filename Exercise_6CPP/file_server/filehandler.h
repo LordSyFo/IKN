@@ -19,10 +19,13 @@ public:
     void printFiles();
     int updateFilesInCurrentFolder();
     bool checkForFile(const std::string str);
-    char* openFile(const std::string);
     int getSize(std::string str);
     std::string getType(std::string str);
-    int sendFile(std::string header,bsocket server,std::string fileName, int chunksize);
+    int sendFile(std::string header,
+                 bsocket server,
+                 std::string fileName,
+                 int chunksize,
+                 int udelay);
 
 private:
     std::vector<std::string> files;

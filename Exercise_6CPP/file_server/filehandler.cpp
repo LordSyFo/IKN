@@ -9,6 +9,7 @@
 #include <stdio.h>
 #include "bsocket.h"
 #include <unistd.h>
+#include <string.h>
 
 using namespace std;
 
@@ -22,30 +23,6 @@ void fileHandler::printFiles()
 {
     for (vector<string>::iterator it = files.begin(); it != files.end(); ++it)
         cout << *it << endl;
-}
-
-char* fileHandler::openFile(string fileName)
-{
-    char* buffer; long filesize;
-
-    /*Open file in stream*/
-    ifstream fin(fileName.insert(0,fileDir),ios::in|ios::binary|ios::ate);
-
-    /*Get size of file and reset to begin*/
-    filesize = fin.tellg();
-    fin.seekg(0,ios::beg);
-
-    /*Allocate filesize in char array buffer*/
-    buffer = new char[filesize];
-
-    /*Read file binary into buffer*/
-    fin.read(buffer,filesize);
-    fin.close();
-
-    /*Save filesize in attribute*/
-    filesize_ = filesize;
-
-    return buffer;
 }
 
 int fileHandler::updateFilesInCurrentFolder()
@@ -81,9 +58,8 @@ int fileHandler::getSize(std::string str)
     return -1;
 }
 
-int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize)
+int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize, int udelay)
 {
-    int debug_timedelay = 1000000;
     /*Read input file*/
     cout << "Reading " << fileName << endl;
     ifstream fin(fileName.insert(0,fileDir), ios::binary | ios::ate);
@@ -96,9 +72,9 @@ int fileHandler::sendFile(string header,bsocket server,std::string fileName, int
     cout << "Defined buffer" << endl;
 
     /*Send header first*/
-    server.sendMessage((char*)header.c_str(),256); //TODO: make size dynamic
+    server.sendMessage((char*)header.c_str(),strlen(header.c_str())); //Can use strlen here because header is a normal null-terminated string
     cout << "Sending header.." << endl;
-    usleep(debug_timedelay);
+    usleep(udelay);
     int sendData = 0;
 
     /*Read from file in chunks*/
@@ -111,13 +87,13 @@ int fileHandler::sendFile(string header,bsocket server,std::string fileName, int
         server.sendMessage((char*)buffer,chunksize);
         i++;
 
-        /*If chunk is bigger than file truncate it*/
+        /*If chunk is bigger than file then truncate it*/
         if (i*chunksize>filesize){
             chunksize = filesize-(i-1)*chunksize;
             cout << "Truncating chunksize to " << chunksize << endl;
         }
 
-        usleep(debug_timedelay);  //Wait for debug
+        usleep(udelay);  //Wait for debugging
     }
 
     cout << "Finished sending all file-data" << endl;
