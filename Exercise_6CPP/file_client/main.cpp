@@ -12,6 +12,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -54,43 +55,38 @@ int main(int argc, char *argv[])
         file_message fm;
         fm = myMessage.parseFileMessage(messages);
 
+        /*Print parsed header information*/
+        cout << "----HEADER INFORMATION----" << endl;
         cout << "Header string length: " << strlen(header) <<endl;
         cout << "Filesize: " << fm.fileSize << endl;
-        //size_t iterations = ceil(fm.fileSize/sendLength);
-        recieved    = 0;   //Reset bytes recieved var
-        int i       = 0;
+        cout << "Chunksize: " << fm.chunkSize << endl;
+        cout << "Filename: " << fm.fileName << endl;
+        cout << "Filetype: " << fm.fileType << endl;
 
-        char* file_string = new char[fm.fileSize];
+        /*Variables for keeping track of recieved bytes*/
+        recieved    = 0;   //Reset bytes recieved var
+
+        /*Make filestream*/
+        ofstream fout(fm.fileName, ios::binary);
+        unsigned char *buffer = new unsigned char[fm.chunkSize]; //DYNAMIC!
+        int prev_recieved = 0;
 
         while(recieved < fm.fileSize)
         {
-            /*Dont read 1000 characters if it exceeds filesize*/
-            if (recieved+sendLength>fm.fileSize)
-            {
-                strcat(file_string,Client.listen_(&recieved,sendLength-(recieved+sendLength-fm.fileSize)));
-                //cout << file_string << endl;
-            } else
-            {
-                strcat(file_string,Client.listen_(&recieved,1000));
-                //cout << file_string << endl;
-            }
-            cout << i << endl;
-            //system("CLS");
+            prev_recieved=recieved;
+            memcpy(buffer,(char*)Client.listen_(&recieved,fm.chunkSize),fm.chunkSize);
+            fout.write((char*)buffer,recieved-prev_recieved);
             cout << "Messages recieved: " << messages.size() << endl;
             cout << "Recieved: " << recieved << " / " << fm.fileSize << endl;
-            i++;
         }
-
-        fm.data = file_string;
 
         cout << "Finished recieving file!" << endl;
         cout << "-----FILE INFORMATION-----" << endl;
         cout << "Size: " << fm.fileSize << endl;
         cout << "Type: " << fm.fileType << endl;
-
-        /*Make file*/
-        fileHandler fh;
-        fh.makeFileFromBinary(fm,"copy_file");
+        cout << "Filename: " << fm.fileName << endl;
+        cout << "File downloaded " << fm.chunkSize << " bytes at a time." << endl;
+        fout.close();
     }
 
     return 0;
