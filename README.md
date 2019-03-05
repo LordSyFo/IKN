@@ -11,4 +11,4 @@ C++ Project for requesting files from a server
   
 * Colophon
   * Credits -- Aarhus University
-  * Copyright and License - LINK LICENSE.md
+  * Copyright and License - [LICENSE.md](https://github.com/LordSyFo/IKN/blob/master/LICENSE.md "LICENSE")
