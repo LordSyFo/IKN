@@ -27,9 +27,9 @@ message::message(fileHandler file,string fileName, int sendLength)
     sprintf(header,
             "Size:%d\nType:%s\nName:%s\nChunksize:%d\n",
             file.getSize(fileName),
-            file.getType(fileName).c_str()),
-            fileName,
-            sendLength;
+            file.getType(fileName).c_str(),
+            fileName.c_str(),
+            sendLength);
     _messages.push_back(header);
 
     cout << "File size: " << file.getSize(fileName) << endl;
