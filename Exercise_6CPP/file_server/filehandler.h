@@ -8,7 +8,7 @@ typedef struct file_message
 {
     int fileSize = 0;
     std::string fileType;
-    char* fileName;
+    std::string fileName;
     int chunkSize = 0;
 } file_message;
 
