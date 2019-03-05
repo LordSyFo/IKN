@@ -25,7 +25,7 @@ message::message(fileHandler file,string fileName, int sendLength)
     /*Append header to message vector*/
     char* header = new char[256];
     sprintf(header,
-            "Size:%d\nType:%s\nName:%sChunksize:%d\n",
+            "Size:%d\nType:%s\nName:%s\nChunksize:%d\n",
             file.getSize(fileName),
             file.getType(fileName).c_str()),
             fileName,

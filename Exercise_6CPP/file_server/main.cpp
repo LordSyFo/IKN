@@ -66,7 +66,6 @@ int main(int argc, char *argv[])
             cout << "Checking for requested file: " << request_buffer << ".." << endl;
             if (FileH.checkForFile(request_buffer))
             {
-                //cout << FileH.openFile(file) << endl;
                 cout << FileH.getSize(request_buffer) << endl;
 
                 /*Make message*/

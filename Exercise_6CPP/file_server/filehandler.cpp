@@ -83,6 +83,7 @@ int fileHandler::getSize(std::string str)
 
 int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize)
 {
+    int debug_timedelay = 1000000;
     /*Read input file*/
     cout << "Reading " << fileName << endl;
     ifstream fin(fileName.insert(0,fileDir), ios::binary | ios::ate);
@@ -97,7 +98,7 @@ int fileHandler::sendFile(string header,bsocket server,std::string fileName, int
     /*Send header first*/
     server.sendMessage((char*)header.c_str(),256); //TODO: make size dynamic
     cout << "Sending header.." << endl;
-    usleep(100000);
+    usleep(debug_timedelay);
     int sendData = 0;
 
     /*Read from file in chunks*/
@@ -116,7 +117,7 @@ int fileHandler::sendFile(string header,bsocket server,std::string fileName, int
             cout << "Truncating chunksize to " << chunksize << endl;
         }
 
-        usleep(10000);  //Wait for debug
+        usleep(debug_timedelay);  //Wait for debug
     }
 
     cout << "Finished sending all file-data" << endl;
