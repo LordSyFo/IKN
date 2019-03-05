@@ -25,10 +25,11 @@ message::message(fileHandler file,string fileName, int sendLength)
     /*Append header to message vector*/
     char* header = new char[256];
     sprintf(header,
-            "Size:%d\nType:%s\nName:%s\n",
+            "Size:%d\nType:%s\nName:%sChunksize:%d\n",
             file.getSize(fileName),
             file.getType(fileName).c_str()),
-            fileName;
+            fileName,
+            sendLength;
     _messages.push_back(header);
 
     cout << "File size: " << file.getSize(fileName) << endl;
@@ -69,7 +70,8 @@ file_message message::parseFileMessage(vector<char*>message)
     /*Find and add filesize*/
     tmpmss.fileSize = stoi(findField("Size:",message[0]));
     tmpmss.fileType = findField("Type:",message[0]);
-    tmpmss.fileType = findField("Name:",message[0]);
+    tmpmss.fileName = findField("Name:",message[0]);
+    tmpmss.chunkSize = stoi(findField("Chunksize:",message[0]));
 
     return tmpmss;
 }
