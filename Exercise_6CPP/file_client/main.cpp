@@ -63,6 +63,13 @@ int main(int argc, char *argv[])
         cout << "Filename: " << fm.fileName << endl;
         cout << "Filetype: " << fm.fileType << endl;
 
+        if (fm.fileName == "N/A" && fm.fileType == "N/A")
+        {
+            cout << "Server could not find requested file!"<<endl;
+            cout<<"Please try requesting a different file.."<<endl;
+            return 0;
+        }
+
         /*Variables for keeping track of recieved bytes*/
         recieved    = 0;   //Reset bytes recieved var
 
