@@ -83,16 +83,20 @@ file_message message::parseFileMessage(vector<char*>message)
     /*Check if strings has digits to avoid exception thrown*/
     if (hasDigit(size))
     {
+        cout << size << " has digits!" << endl;
         tmpmss.fileSize = stoi(size);
     } else {
+        cout << size << " doesnt have digits!" << endl;
         tmpmss.fileSize = -1;
     }
 
     if (hasDigit(chunkSize))
     {
-        tmpmss.fileSize = stoi(chunkSize);
+        cout << chunkSize << " has digits!" << endl;
+        tmpmss.chunkSize = stoi(chunkSize);
     } else {
-        tmpmss.fileSize = -1;
+        cout << chunkSize << " doesnt have digits!" << endl;
+        tmpmss.chunkSize = -1;
     }
 
     tmpmss.fileType = findField("Type:",message[0]);

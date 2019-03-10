@@ -13,6 +13,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <fstream>
+#include <unistd.h>
 
 using namespace std;
 
