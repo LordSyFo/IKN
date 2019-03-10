@@ -77,6 +77,7 @@ int main(int argc, char *argv[])
                 fm = myMessage.parseFileMessage(myMessage.getMessages());
                 cout << "Size of file: " << fm.fileSize << endl;
                 cout << "Extension of file: " << fm.fileType << endl;
+                cout << "Chunksize of file: " << fm.chunkSize << endl;
 
                 /*Begin to transmit messages*/
                 FileH.sendFile(myMessage.getHeader(),Server,request_buffer,1000,10000);
