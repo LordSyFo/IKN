@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 
                 /*Make message*/
                 message myMessage(FileH, request_buffer, chunk_size);
-                myMessage.printMessage(0);
+                myMessage.printMessage(0);  //Message[0] = header
 
                 /*Make file_message struct for debugging purposes*/
                 file_message fm;
@@ -86,6 +86,10 @@ int main(int argc, char *argv[])
             } else
             {
                 cout << request_buffer << " doesnt exist!" << endl;
+                message errorMessage;
+                errorMessage.printMessage(0);
+                string tmp = errorMessage.getHeader();
+                Server.sendMessage((char*)tmp.c_str(),strlen(tmp.c_str()));
             }
         }
         cout << "Getting ready for new connections.." << endl;

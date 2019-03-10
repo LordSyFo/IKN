@@ -15,6 +15,7 @@ public:
     std::vector<char*> getMessages();
     file_message parseFileMessage(std::vector<char *>message);
     std::string getHeader();
+    bool hasDigit(std::string);
 
 private:
     std::vector<char*>_messages;

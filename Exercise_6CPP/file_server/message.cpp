@@ -5,12 +5,21 @@
 #include <cmath>
 #include <iostream>
 #include <string.h>
+#include <cctype>
+#include <algorithm>
 
 using namespace std;
 
 message::message()
 {
     cout << "Making default message object.." << endl;
+    cout << "-------------------------------" << endl;
+    cout << "Adding N/A to fields..........." << endl;
+    char* header = new char[256];   //Maybe truncate?
+    sprintf(header,
+            "Size:N/A\nType:N/A\nName:N/A\nChunksize:N/A\n");
+    _messages.push_back(header);
+    cout << "Succesfully made not available message!" << endl;
 }
 
 message::message(fileHandler file,string fileName, int sendLength)
@@ -68,10 +77,26 @@ file_message message::parseFileMessage(vector<char*>message)
     cout << message[0] << endl;
 
     /*Find and add filesize*/
-    tmpmss.fileSize = stoi(findField("Size:",message[0]));
+    string size = findField("Size:",message[0]);
+    string chunkSize = findField("Chunksize:",message[0]);
+
+    /*Check if strings has digits to avoid exception thrown*/
+    if (hasDigit(size))
+    {
+        tmpmss.fileSize = stoi(size);
+    } else {
+        tmpmss.fileSize = -1;
+    }
+
+    if (hasDigit(chunkSize))
+    {
+        tmpmss.fileSize = stoi(chunkSize);
+    } else {
+        tmpmss.fileSize = -1;
+    }
+
     tmpmss.fileType = findField("Type:",message[0]);
     tmpmss.fileName = findField("Name:",message[0]);
-    tmpmss.chunkSize = stoi(findField("Chunksize:",message[0]));
 
     return tmpmss;
 }
@@ -90,4 +115,9 @@ string message::findField(const string field, string mes) {
     size_t start = mes.find(field);
     size_t end = mes.find('\n', start);
     return mes.substr(start + field.length(),end - (start + field.length()));
+}
+
+bool message::hasDigit(const std::string& s)
+{
+    return std::any_of(s.begin(), s.end(), ::isdigit);
 }
