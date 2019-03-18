@@ -40,7 +40,7 @@ int bsocket::_open()
 {
     cout << "Creating/Opening socket on " << server_address_.sin_addr.s_addr << ":" << server_address_.sin_port <<endl;
     /*Create socket*/
-    sockfd_ = socket(AF_INET,SOCK_STREAM,0);
+    sockfd_ = socket(AF_INET,SOCK_STREAM,0);    //( SOCK_STREAM for TCP / SOCK_DGRAM for UDP ) set type=0 to use sockettype as protocol
     if (sockfd_<0)
     {
         error("ERROR Opening socket!");
