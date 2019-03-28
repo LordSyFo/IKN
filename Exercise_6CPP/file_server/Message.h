@@ -2,13 +2,13 @@
 #define MESSAGE_H
 #include <string>
 #include <vector>
-#include "filehandler.h"
+#include "Filehandler.h"
 
-class message
+class Message
 {
 public:
-    message();
-    message(fileHandler,std::string, int);
+    Message();
+    Message(Filehandler,std::string, int);
     void printAllMessages();
     void printMessage(int i);
     int getNumberOfMessages();
@@ -20,7 +20,7 @@ public:
 private:
     std::vector<char*>_messages;
     file_message _fmess;
-    fileHandler test;
+    Filehandler test;
 
     /*Private methods*/
     std::string findField(const std::string field, std::string mes);

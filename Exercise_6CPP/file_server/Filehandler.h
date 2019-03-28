@@ -2,7 +2,7 @@
 #define FILEHANDLER_H
 #include <vector>
 #include <string>
-#include "bsocket.h"
+#include "Serversocket.h"
 
 typedef struct file_message
 {
@@ -12,17 +12,17 @@ typedef struct file_message
     int chunkSize = 0;
 } file_message;
 
-class fileHandler
+class Filehandler
 {
 public:
-    fileHandler();
+    Filehandler();
     void printFiles();
     int updateFilesInCurrentFolder();
     bool checkForFile(const std::string str);
     int getSize(std::string str);
     std::string getType(std::string str);
     int sendFile(std::string header,
-                 bsocket server,
+                 Serversocket server,
                  std::string fileName,
                  int chunksize,
                  int udelay);

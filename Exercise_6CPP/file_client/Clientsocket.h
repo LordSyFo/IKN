@@ -3,10 +3,10 @@
 #include <string>
 #include <netinet/in.h>
 
-class client_socket
+class Clientsocket
 {
 public:
-    client_socket(char* target_ip, int portno);
+    Clientsocket(char* target_ip, int portno);
     void connect_();
     int open_();
     char *listen_(int* bytecount,int no_b_read);

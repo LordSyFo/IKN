@@ -51,15 +51,17 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../file_client/main.cpp \
-		../file_client/client_socket.cpp \
-		../file_server/bsocket.cpp \
-		../file_server/filehandler.cpp \
-		../file_server/message.cpp 
+		../file_server/Serversocket.cpp \
+		../file_server/Filehandler.cpp \
+		../file_server/Message.cpp \
+		../file_client/Clientsocket.cpp \
+		../file_server/Serversocket.cpp 
 OBJECTS       = main.o \
-		client_socket.o \
 		bsocket.o \
-		filehandler.o \
-		message.o
+		Filehandler.o \
+		Message.o \
+		Clientsocket.o \
+		Serversocket.o
 DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -128,14 +130,16 @@ DIST          = /usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../file_client/file_client.pro client_socket.h \
-		../file_server/bsocket.h \
+		../file_client/file_client.pro ../file_server/bsocket.h \
 		../file_server/filehandler.h \
-		../file_server/message.h ../file_client/main.cpp \
-		../file_client/client_socket.cpp \
-		../file_server/bsocket.cpp \
-		../file_server/filehandler.cpp \
-		../file_server/message.cpp
+		../file_server/message.h \
+		Clientsocket.h \
+		../file_server/Serversocket.h ../file_client/main.cpp \
+		../file_server/Serversocket.cpp \
+		../file_server/Filehandler.cpp \
+		../file_server/Message.cpp \
+		../file_client/Clientsocket.cpp \
+		../file_server/Serversocket.cpp
 QMAKE_TARGET  = file_client
 DESTDIR       = 
 TARGET        = file_client
@@ -329,23 +333,30 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../file_client/main.cpp ../file_client/client_socket.h \
-		/root/Git/IKN/Exercise_6CPP/file_server/message.h \
-		../file_server/filehandler.h
+main.o: ../file_client/main.cpp ../file_client/Clientsocket.h \
+		/root/Git/IKN/Exercise_6CPP/file_server/Message.h \
+		../file_server/Filehandler.h \
+		../file_server/Serversocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../file_client/main.cpp
 
-client_socket.o: ../file_client/client_socket.cpp ../file_client/client_socket.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o client_socket.o ../file_client/client_socket.cpp
+Serversocket.o: ../file_server/Serversocket.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/Serversocket.cpp
 
-bsocket.o: ../file_server/bsocket.cpp ../file_server/bsocket.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/bsocket.cpp
+Filehandler.o: ../file_server/Filehandler.cpp /root/Git/IKN/Exercise_6CPP/file_server/Filehandler.h \
+		../file_server/Serversocket.h \
+		/root/Git/IKN/Exercise_6CPP/file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Filehandler.o ../file_server/Filehandler.cpp
 
-filehandler.o: ../file_server/filehandler.cpp ../file_server/filehandler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filehandler.o ../file_server/filehandler.cpp
+Message.o: ../file_server/Message.cpp ../file_server/Message.h \
+		../file_server/Filehandler.h \
+		../file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Message.o ../file_server/Message.cpp
 
-message.o: ../file_server/message.cpp ../file_server/message.h \
-		../file_server/filehandler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o message.o ../file_server/message.cpp
+Clientsocket.o: ../file_client/Clientsocket.cpp ../file_client/Clientsocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Clientsocket.o ../file_client/Clientsocket.cpp
+
+Serversocket.o: ../file_server/Serversocket.cpp ../file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Serversocket.o ../file_server/Serversocket.cpp
 
 ####### Install
 

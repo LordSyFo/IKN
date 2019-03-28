@@ -3,11 +3,11 @@
 #include <string>
 #include <netinet/in.h>
 
-class bsocket
+class Serversocket
 {
 public:
-    bsocket();
-    bsocket(char* ip, int portno);
+    Serversocket();
+    Serversocket(char* ip, int portno);
     void sendFile(std::string fileName, long fileSize, int outToClient);
     void error(const char* str);
     virtual std::string _listen();

@@ -5,10 +5,10 @@
 // Description : file_server in C++, Ansi-style
 //============================================================================
 
-#include "bsocket.h"
-#include "filehandler.h"
+#include "Serversocket.h"
+#include "Filehandler.h"
 #include <iostream>
-#include "message.h"
+#include "Message.h"
 #include <unistd.h>
 #include <string.h>
 #include <fstream>
@@ -43,7 +43,7 @@ void error(char* str)
 int main(int argc, char *argv[])
 {
     /*Make filehandler and find available files*/
-    fileHandler FileH;
+    Filehandler FileH;
     cout << "Available files: " << endl;
     FileH.printFiles();
 
@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     int chunk_size = 1000;
 
     /*Make socket object*/
-    bsocket Server("10.0.0.1",9000);
+    Serversocket Server("10.0.0.1",9000);
 
     /*Open socket*/
     Server._open();
@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
                 cout << FileH.getSize(request_buffer) << endl;
 
                 /*Make message*/
-                message myMessage(FileH, request_buffer, chunk_size);
+                Message myMessage(FileH, request_buffer, chunk_size);
                 myMessage.printMessage(0);  //Message[0] = header
 
                 /*Make file_message struct for debugging purposes*/
@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
             } else
             {
                 cout << request_buffer << " doesnt exist!" << endl;
-                message errorMessage;
+                Message errorMessage;
                 errorMessage.printMessage(0);
                 string tmp = errorMessage.getHeader();
                 Server.sendMessage((char*)tmp.c_str(),strlen(tmp.c_str()));

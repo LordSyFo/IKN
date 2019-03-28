@@ -1,7 +1,7 @@
-#include "message.h"
+#include "Message.h"
 #include <string>
 #include <sstream>
-#include "filehandler.h"
+#include "Filehandler.h"
 #include <cmath>
 #include <iostream>
 #include <string.h>
@@ -10,7 +10,7 @@
 
 using namespace std;
 
-message::message()
+Message::Message()
 {
     cout << "Making default message object.." << endl;
     cout << "-------------------------------" << endl;
@@ -22,7 +22,7 @@ message::message()
     cout << "Succesfully made not available message!" << endl;
 }
 
-message::message(fileHandler file,string fileName, int sendLength)
+Message::Message(Filehandler file,string fileName, int sendLength)
 {
     if (!file.checkForFile(fileName))
     {
@@ -45,7 +45,7 @@ message::message(fileHandler file,string fileName, int sendLength)
     cout << "Message size: " << _messages.size() << endl;
 }
 
-void message::printMessage(int i)
+void Message::printMessage(int i)
 {
     if (i < _messages.size())
     {
@@ -58,19 +58,19 @@ void message::printMessage(int i)
     }
 }
 
-int message::getNumberOfMessages()
+int Message::getNumberOfMessages()
 {
     return _messages.size();
 }
 
-void message::printAllMessages()
+void Message::printAllMessages()
 {
     for(auto i : _messages) {
         cout << i << '\n';
     }
 }
 
-file_message message::parseFileMessage(vector<char*>message)
+file_message Message::parseFileMessage(vector<char*>message)
 {
     file_message tmpmss;
 
@@ -105,23 +105,23 @@ file_message message::parseFileMessage(vector<char*>message)
     return tmpmss;
 }
 
-string message::getHeader()
+string Message::getHeader()
 {
     return _messages[0];
 }
 
-vector<char*> message::getMessages()
+vector<char*> Message::getMessages()
 {
     return _messages;
 }
 
-string message::findField(const string field, string mes) {
+string Message::findField(const string field, string mes) {
     size_t start = mes.find(field);
     size_t end = mes.find('\n', start);
     return mes.substr(start + field.length(),end - (start + field.length()));
 }
 
-bool message::hasDigit(const std::string& s)
+bool Message::hasDigit(const std::string& s)
 {
     return std::any_of(s.begin(), s.end(), ::isdigit);
 }

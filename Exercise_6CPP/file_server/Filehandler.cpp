@@ -1,4 +1,4 @@
-#include "filehandler.h"
+#include "/root/Git/IKN/Exercise_6CPP/file_server/Filehandler.h"
 #include <iostream>
 #include <sys/types.h>
 #include <dirent.h>
@@ -7,25 +7,25 @@
 #include <sstream>
 #include <string>
 #include <stdio.h>
-#include "bsocket.h"
+#include "/root/Git/IKN/Exercise_6CPP/file_server/Serversocket.h"
 #include <unistd.h>
 #include <string.h>
 
 using namespace std;
 
-fileHandler::fileHandler()
+Filehandler::Filehandler()
 {
     updateFilesInCurrentFolder();
 }
 
 
-void fileHandler::printFiles()
+void Filehandler::printFiles()
 {
     for (vector<string>::iterator it = files.begin(); it != files.end(); ++it)
         cout << *it << endl;
 }
 
-int fileHandler::updateFilesInCurrentFolder()
+int Filehandler::updateFilesInCurrentFolder()
 {
     DIR* dirp = opendir(fileDir.c_str());
     struct dirent * dp;
@@ -36,7 +36,7 @@ int fileHandler::updateFilesInCurrentFolder()
     closedir(dirp);
 }
 
-bool fileHandler::checkForFile(const std::string str){
+bool Filehandler::checkForFile(const std::string str){
     if (std::find(files.begin(), files.end(), str) != files.end())
     {
         return true;
@@ -44,7 +44,7 @@ bool fileHandler::checkForFile(const std::string str){
     return false;
 }
 
-int fileHandler::getSize(std::string str)
+int Filehandler::getSize(std::string str)
 {
     if (checkForFile(str))
     {
@@ -58,7 +58,7 @@ int fileHandler::getSize(std::string str)
     return -1;
 }
 
-int fileHandler::sendFile(string header,bsocket server,std::string fileName, int chunksize, int udelay)
+int Filehandler::sendFile(string header,Serversocket server,std::string fileName, int chunksize, int udelay)
 {
     /*Read input file*/
     cout << "Reading " << fileName << endl;
@@ -104,7 +104,7 @@ int fileHandler::sendFile(string header,bsocket server,std::string fileName, int
     return 1;
 }
 
-std::string fileHandler::getType(std::string str)
+std::string Filehandler::getType(std::string str)
 {
     size_t i = str.rfind('.', str.length());
     if (i != string::npos) {

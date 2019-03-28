@@ -4,9 +4,9 @@
 // Version     : 1.0
 // Description : file_client in C++, Ansi-style
 //============================================================================
-#include "client_socket.h"
+#include "Clientsocket.h"
 #include <iostream>
-#include "/root/Git/IKN/Exercise_6CPP/file_server/message.h"
+#include "/root/Git/IKN/Exercise_6CPP/file_server/Message.h"
 #include <string>
 #include <cmath>
 #include <string.h>
@@ -30,12 +30,12 @@ int main(int argc, char *argv[])
     }
     std::string filename_str = argv[1];
 
-    client_socket Client("10.0.0.1",9000);
+    Clientsocket Client("10.0.0.1",9000);
     Client.open_();
     Client.connect_();
 
     /*Make message object for recieved message*/
-    message myMessage;
+    Message myMessage;
     vector<char*>(messages);
 
     /*Send file-request message to server*/

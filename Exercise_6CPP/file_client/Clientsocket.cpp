@@ -1,4 +1,4 @@
-#include "client_socket.h"
+#include "Clientsocket.h"
 #include "stdlib.h"
 #include <iostream>
 #include <fstream>
@@ -15,7 +15,7 @@
 
 using namespace std;
 
-client_socket::client_socket(char* target_ip, int portno)
+Clientsocket::Clientsocket(char* target_ip, int portno)
 {
     /*Defintions*/
     cout << "Initializing variables.." << endl;
@@ -37,7 +37,7 @@ client_socket::client_socket(char* target_ip, int portno)
 }
 
 
-void client_socket::connect_()
+void Clientsocket::connect_()
 {
     /*Connect to server*/
     cout << "Connecting to server.." << endl;
@@ -52,12 +52,12 @@ void client_socket::connect_()
     cout << "Port: " << server_address_.sin_port <<endl;
 }
 
-int client_socket::getSocketFd()
+int Clientsocket::getSocketFd()
 {
     return sockfd_;
 }
 
-int client_socket::open_()
+int Clientsocket::open_()
 {
     /*Open socket */
     cout << "Opening socket.." << endl;
@@ -68,7 +68,7 @@ int client_socket::open_()
     }
 }
 
-void client_socket::sendMessage(char* str)
+void Clientsocket::sendMessage(char* str)
 {
     int n = write(getSocketFd(),str,strlen(str));
     if (n < 0)
@@ -77,7 +77,7 @@ void client_socket::sendMessage(char* str)
     }
 }
 
-char* client_socket::listen_(int* byte_count, int no_b_read)
+char* Clientsocket::listen_(int* byte_count, int no_b_read)
 {
     int n = recv(getSocketFd(), buffer_, no_b_read,0);
     *byte_count += n;

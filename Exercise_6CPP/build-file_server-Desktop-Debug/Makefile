@@ -51,13 +51,13 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../file_server/main.cpp \
-		../file_server/bsocket.cpp \
-		../file_server/filehandler.cpp \
-		../file_server/message.cpp 
+		../file_server/Serversocket.cpp \
+		../file_server/Message.cpp \
+		../file_server/Filehandler.cpp 
 OBJECTS       = main.o \
-		bsocket.o \
-		filehandler.o \
-		message.o
+		Serversocket.o \
+		Message.o \
+		Filehandler.o
 DIST          = ../file_server/backup \
 		../../simpleFileCopy.txt \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
@@ -128,12 +128,12 @@ DIST          = ../file_server/backup \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/exceptions.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/yacc.prf \
 		/usr/lib/i386-linux-gnu/qt5/mkspecs/features/lex.prf \
-		../file_server/file_server.pro bsocket.h \
-		filehandler.h \
-		message.h ../file_server/main.cpp \
-		../file_server/bsocket.cpp \
-		../file_server/filehandler.cpp \
-		../file_server/message.cpp
+		../file_server/file_server.pro Serversocket.h \
+		Message.h \
+		Filehandler.h ../file_server/main.cpp \
+		../file_server/Serversocket.cpp \
+		../file_server/Message.cpp \
+		../file_server/Filehandler.cpp
 QMAKE_TARGET  = file_server
 DESTDIR       = 
 TARGET        = file_server
@@ -327,20 +327,22 @@ compiler_clean:
 
 ####### Compile
 
-main.o: ../file_server/main.cpp ../file_server/bsocket.h \
-		../file_server/filehandler.h \
-		../file_server/message.h
+main.o: ../file_server/main.cpp ../file_server/Serversocket.h \
+		../file_server/Filehandler.h \
+		../file_server/Message.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../file_server/main.cpp
 
-bsocket.o: ../file_server/bsocket.cpp ../file_server/bsocket.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o bsocket.o ../file_server/bsocket.cpp
+Serversocket.o: ../file_server/Serversocket.cpp ../file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Serversocket.o ../file_server/Serversocket.cpp
 
-filehandler.o: ../file_server/filehandler.cpp ../file_server/filehandler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o filehandler.o ../file_server/filehandler.cpp
+Message.o: ../file_server/Message.cpp ../file_server/Message.h \
+		../file_server/Filehandler.h \
+		../file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Message.o ../file_server/Message.cpp
 
-message.o: ../file_server/message.cpp ../file_server/message.h \
-		../file_server/filehandler.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o message.o ../file_server/message.cpp
+Filehandler.o: ../file_server/Filehandler.cpp ../file_server/Filehandler.h \
+		../file_server/Serversocket.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Filehandler.o ../file_server/Filehandler.cpp
 
 ####### Install
 

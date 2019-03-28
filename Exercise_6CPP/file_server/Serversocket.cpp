@@ -1,4 +1,4 @@
-#include "bsocket.h"
+#include "Serversocket.h"
 #include <iostream>
 #include <fstream>
 #include <stdio.h>
@@ -13,12 +13,12 @@
 
 using namespace std;
 
-bsocket::bsocket()
+Serversocket::Serversocket()
 {
 
 }
 
-bsocket::bsocket(char* ip, int portno)
+Serversocket::Serversocket(char* ip, int portno)
 {
     cout << "Initializing variables.." << endl;
     /*Declarations and assignments*/
@@ -36,7 +36,7 @@ bsocket::bsocket(char* ip, int portno)
     };
 }
 
-int bsocket::_open()
+int Serversocket::_open()
 {
     cout << "Creating/Opening socket on " << server_address_.sin_addr.s_addr << ":" << server_address_.sin_port <<endl;
     /*Create socket*/
@@ -58,7 +58,7 @@ int bsocket::_open()
     return 1;
 }
 
-std::string bsocket::_listen()
+std::string Serversocket::_listen()
 {
 
     //cout << "Listening for message.." << endl;
@@ -84,12 +84,12 @@ std::string bsocket::_listen()
     return buffer_;
 }
 
-int bsocket::getSocketFd()
+int Serversocket::getSocketFd()
 {
     return newsockfd_;
 }
 
-void bsocket::sendMessage(char* str,int no_bytes)
+void Serversocket::sendMessage(char* str,int no_bytes)
 {
     //cout<<"Message length in sendMessage(): "<<strlen(str)<<endl;
     int n = write(getSocketFd(),str,no_bytes);
@@ -105,13 +105,13 @@ void bsocket::sendMessage(char* str,int no_bytes)
     cout<<"Succesfully send message"<<endl;
 }
 
-void bsocket::error(const char* str)
+void Serversocket::error(const char* str)
 {
     perror(str);
     exit(1);
 }
 
-void bsocket::closeConnections()
+void Serversocket::closeConnections()
 {
     /*Close sockets*/
     close(newsockfd_);close(sockfd_);
