@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     }
     std::string filename_str = argv[1];
 
-    Clientsocket Client("10.0.0.1",9000);
+    Clientsocket Client("10.0.0.1",9000,UDP_);
     Client.open_();
     Client.connect_();
 
@@ -52,9 +52,18 @@ int main(int argc, char *argv[])
     if (strcmp(header,"")!=0)
     {
         /*Parse message to get fields including file-size*/
-        cout << "Recieved header.." << endl;
+        //cout << "Recieved header.." << endl;
         file_message fm;
         fm = myMessage.parseFileMessage(messages);
+
+        if (strlen(header)<100|| fm.fileName == "N/A" && fm.fileType == "N/A")
+        {
+            cout << "Server could not find requested file!"<<endl;
+            cout<<"Please try requesting a different file.."<<endl;
+            cout<<"Message from server: " << endl;
+            cout<<header<<endl;
+            return 0;
+        }
 
         /*Print parsed header information*/
         cout << "----HEADER INFORMATION----" << endl;
@@ -63,13 +72,6 @@ int main(int argc, char *argv[])
         cout << "Chunksize: " << fm.chunkSize << endl;
         cout << "Filename: " << fm.fileName << endl;
         cout << "Filetype: " << fm.fileType << endl;
-
-        if (fm.fileName == "N/A" && fm.fileType == "N/A")
-        {
-            cout << "Server could not find requested file!"<<endl;
-            cout<<"Please try requesting a different file.."<<endl;
-            return 0;
-        }
 
         /*Variables for keeping track of recieved bytes*/
         recieved    = 0;   //Reset bytes recieved var

@@ -4,17 +4,15 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += main.cpp \
-    ../file_server/bsocket.cpp \
-    ../file_server/filehandler.cpp \
-    ../file_server/message.cpp \
-    Clientsocket.cpp \
-    ../file_server/Serversocket.cpp
+    ../file_server/Serversocket.cpp \
+    ../file_server/Filehandler.cpp \
+    ../file_server/Message.cpp \
+    Clientsocket.cpp
 
 unix:!macx: LIBS += -liknlib
 
 HEADERS += \
-    ../file_server/bsocket.h \
-    ../file_server/filehandler.h \
-    ../file_server/message.h \
-    Clientsocket.h \
-    ../file_server/Serversocket.h
+    ../file_server/Serversocket.h \
+    ../file_server/Filehandler.h \
+    ../file_server/Message.h \
+    Clientsocket.h

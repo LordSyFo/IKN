@@ -3,10 +3,12 @@
 #include <string>
 #include <netinet/in.h>
 
+enum{TCP_, UDP_};
+
 class Clientsocket
 {
 public:
-    Clientsocket(char* target_ip, int portno);
+    Clientsocket(char* target_ip, int portno, int sockettype=TCP_);
     void connect_();
     int open_();
     char *listen_(int* bytecount,int no_b_read);
@@ -21,6 +23,7 @@ private:
     struct sockaddr_in client_address_;
     int sockfd_, newsockfd_, portno_, clilen_, pid_;
     char buffer_[2048];
+    int sockettype_ = TCP_;
 };
 
 #endif // CLIENT_SOCKET_H

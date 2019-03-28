@@ -3,7 +3,7 @@
 #include <string>
 #include <netinet/in.h>
 
-enum {TCP,UDP};
+enum{TCP,UDP};
 
 class Serversocket
 {

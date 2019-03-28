@@ -15,11 +15,12 @@
 
 using namespace std;
 
-Clientsocket::Clientsocket(char* target_ip, int portno)
+Clientsocket::Clientsocket(char* target_ip, int portno,int servertype)
 {
     /*Defintions*/
     cout << "Initializing variables.." << endl;
     server_ = gethostbyname(target_ip);
+    sockettype_ = servertype;
     cout << "Retrieved host " << server_->h_name << ".." <<endl;
 
     cout << "Setting up server address.." << endl;
@@ -40,6 +41,7 @@ Clientsocket::Clientsocket(char* target_ip, int portno)
 void Clientsocket::connect_()
 {
     /*Connect to server*/
+    if (UDP_) return;
     cout << "Connecting to server.." << endl;
     if (connect(sockfd_,(const sockaddr*)&server_address_,sizeof(server_address_))<0)
     {
@@ -59,33 +61,72 @@ int Clientsocket::getSocketFd()
 
 int Clientsocket::open_()
 {
-    /*Open socket */
+    /*Open socket depending on protocol*/
     cout << "Opening socket.." << endl;
-    sockfd_ = socket(AF_INET,SOCK_STREAM,0);
-    if (sockfd_<0)
+    if (sockettype_ == UDP_)
     {
-        error("ERROR opening socket!");
+        sockfd_ = socket(AF_INET,SOCK_DGRAM,0);
+        if (sockfd_<0)
+        {
+            error("ERROR opening socket on UDP!");
+        }
+    } else {
+        sockfd_ = socket(AF_INET,SOCK_STREAM,0);
+        if (sockfd_<0)
+        {
+            error("ERROR opening socket on TCP!");
+        }
     }
 }
 
 void Clientsocket::sendMessage(char* str)
 {
-    int n = write(getSocketFd(),str,strlen(str));
-    if (n < 0)
+    if (sockettype_ == UDP_)
     {
-        error("ERROR Writing to socket!");
+        /*UDP Sending syntax*/
+        int n = sendto(getSocketFd(),str,strlen(str),
+                       0,
+                       (const struct sockaddr*)&server_address_,
+                       sizeof(struct sockaddr_in));
+        if (n < 0)
+        {
+            error("ERROR Writing to socket with UDP!");
+        }
+    } else {
+        /*TCP Sending syntax*/
+        int n = write(getSocketFd(),str,strlen(str));
+        if (n < 0)
+        {
+            error("ERROR Writing to socket with TCP!");
+        }
     }
 }
 
 char* Clientsocket::listen_(int* byte_count, int no_b_read)
 {
-    int n = recv(getSocketFd(), buffer_, no_b_read,0);
-    *byte_count += n;
-
-    if(0>n){
-        error("ERROR reading from socket");
-        return "";
+    if (sockettype_ == UDP_)
+    {
+        unsigned int length = sizeof(struct sockaddr_in);
+        int n = recvfrom(getSocketFd(), buffer_, no_b_read,
+                         0,
+                         (struct sockaddr*)&server_address_,
+                         &length);
+        *byte_count += n;
+        if(0>n){
+            error("ERROR reading from socket with UDP");
+            return "";
+        } else {
+            return buffer_;
+        }
     } else {
-        return buffer_;
+        int n = recv(getSocketFd(), buffer_, no_b_read,0);
+        *byte_count += n;
+
+        if(0>n){
+            error("ERROR reading from socket with TCP");
+            return "";
+        } else {
+            return buffer_;
+        }
     }
 }
