@@ -76,6 +76,7 @@ std::string Serversocket::_listen()
         {
             error("ERROR Recieving from socket with UDP");
         }
+        newsockfd_ = sockfd_;
         return buffer_;
     } else {
 

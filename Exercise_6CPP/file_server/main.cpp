@@ -84,13 +84,23 @@ int main(int argc, char *argv[])
 
                 cout << "Finished transmitting data!" << endl;
 
-            } else
+            } else if (request_buffer!="CPUINFO")
             {
                 cout << request_buffer << " doesnt exist!" << endl;
                 Message errorMessage;
                 errorMessage.printMessage(0);
                 string tmp = errorMessage.getHeader();
                 Server.sendMessage((char*)tmp.c_str(),strlen(tmp.c_str()));
+            } else {
+                cout << "Client requested for uptime!" << endl;
+                cout << "Catching uptime!" << endl;
+                ifstream fin("/proc/uptime");
+                string strbuffer;
+                if (getline(fin,strbuffer))
+                {
+                    cout << "Sending: "<< strbuffer << endl;
+                    Server.sendMessage((char*)strbuffer.c_str(),strlen(strbuffer.c_str()));
+                }
             }
         }
         cout << "Getting ready for new connections.." << endl;
