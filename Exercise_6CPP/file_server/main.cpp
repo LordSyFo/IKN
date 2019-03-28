@@ -84,17 +84,29 @@ int main(int argc, char *argv[])
 
                 cout << "Finished transmitting data!" << endl;
 
-            } else if (request_buffer!="CPUINFO")
+            } else if (request_buffer!="U"&&request_buffer!="u"&&request_buffer!="L"&&request_buffer!="l")
             {
                 cout << request_buffer << " doesnt exist!" << endl;
                 Message errorMessage;
                 errorMessage.printMessage(0);
                 string tmp = errorMessage.getHeader();
                 Server.sendMessage((char*)tmp.c_str(),strlen(tmp.c_str()));
-            } else {
+            } else if (request_buffer=="U"||request_buffer=="u") {
                 cout << "Client requested for uptime!" << endl;
                 cout << "Catching uptime!" << endl;
                 ifstream fin("/proc/uptime");
+                string strbuffer;
+                if (getline(fin,strbuffer))
+                {
+                    cout << "Sending: "<< strbuffer << endl;
+                    Server.sendMessage((char*)strbuffer.c_str(),strlen(strbuffer.c_str()));
+                }
+
+            } else if(request_buffer=="L"||request_buffer=="l")
+            {
+                cout << "Client requested for average load!" << endl;
+                cout << "Catching average load!" << endl;
+                ifstream fin("/proc/loadavg");
                 string strbuffer;
                 if (getline(fin,strbuffer))
                 {
