@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
     int chunk_size = 1000;
 
     /*Make socket object*/
-    Serversocket Server("10.0.0.1",9000);
+    Serversocket Server("10.0.0.1",9000,UDP);
 
     /*Open socket*/
     Server._open();

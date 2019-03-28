@@ -18,12 +18,13 @@ Serversocket::Serversocket()
 
 }
 
-Serversocket::Serversocket(char* ip, int portno)
+Serversocket::Serversocket(char* ip, int portno, int socktype)
 {
     cout << "Initializing variables.." << endl;
     /*Declarations and assignments*/
     bzero((char*) &server_address_, sizeof(server_address_)); //Fill address with zeros
     portno_ = portno;
+    sockettype_ = socktype;
 
     cout << "Initializing server structures.." << endl;
     /*Fill server address struct*/
@@ -39,8 +40,11 @@ Serversocket::Serversocket(char* ip, int portno)
 int Serversocket::_open()
 {
     cout << "Creating/Opening socket on " << server_address_.sin_addr.s_addr << ":" << server_address_.sin_port <<endl;
-    /*Create socket*/
-    sockfd_ = socket(AF_INET,SOCK_STREAM,0);    //( SOCK_STREAM for TCP / SOCK_DGRAM for UDP ) set type=0 to use sockettype as protocol
+    /*Create socket based on sockettype member variable*/
+    /*( SOCK_STREAM for TCP / SOCK_DGRAM for UDP ) set type=0 to use sockettype as protocol*/
+    if (sockettype_ == TCP) sockfd_ = socket(AF_INET,SOCK_STREAM,0);
+    else sockfd_ = socket(AF_INET,SOCK_DGRAM,0);
+
     if (sockfd_<0)
     {
         error("ERROR Opening socket!");
@@ -60,9 +64,21 @@ int Serversocket::_open()
 
 std::string Serversocket::_listen()
 {
-
     //cout << "Listening for message.." << endl;
     /*Listen for server*/
+    if (sockettype_ == UDP)
+    {
+        clilen_         = sizeof(client_address_);
+        int n           = 0;
+        bzero(buffer_,256);
+        n = recvfrom(sockfd_,buffer_,255,0,(struct sockaddr*) &client_address_,(socklen_t*)&clilen_);
+        if (n<0)
+        {
+            error("ERROR Recieving from socket with UDP");
+        }
+        return buffer_;
+    } else {
+
     listen(sockfd_,5);   //Maybe change 1 to 5
 
     /*Wait for client-connection*/
@@ -82,6 +98,7 @@ std::string Serversocket::_listen()
     }
 
     return buffer_;
+    }
 }
 
 int Serversocket::getSocketFd()
@@ -92,6 +109,14 @@ int Serversocket::getSocketFd()
 void Serversocket::sendMessage(char* str,int no_bytes)
 {
     //cout<<"Message length in sendMessage(): "<<strlen(str)<<endl;
+    if (sockettype_ == UDP)
+    {
+        int n = sendto(getSocketFd(),str,no_bytes,0,(struct sockaddr*) &client_address_,clilen_);
+        if (n<0)
+        {
+            error("ERROR Sending to socket with UDP");
+        }
+    } else {
     int n = write(getSocketFd(),str,no_bytes);
     if (n < 0)
     {
@@ -103,6 +128,7 @@ void Serversocket::sendMessage(char* str,int no_bytes)
         cout << "Only sent " << n << " bytes.." << endl;
     }
     cout<<"Succesfully send message"<<endl;
+    }
 }
 
 void Serversocket::error(const char* str)
