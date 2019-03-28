@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
     }
     std::string filename_str = argv[1];
 
-    Clientsocket Client("10.0.0.1",9000,UDP_);
+    Clientsocket Client("10.0.0.1",9000,TCP_);
+
     Client.open_();
     Client.connect_();
 
