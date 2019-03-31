@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
 {    
     if (argc < 2)
     {
-        cout << "Usage: \\.exe \"Filename with extension\"" << endl;
+        cout << "Usage: \\.exe <Filename with extension>" << endl;
         return 0;
     }
     std::string filename_str = argv[1];
