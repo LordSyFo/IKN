@@ -340,8 +340,9 @@ Message.o: ../file_server/Message.cpp ../file_server/Message.h \
 		../file_server/Serversocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Message.o ../file_server/Message.cpp
 
-Filehandler.o: ../file_server/Filehandler.cpp ../file_server/Filehandler.h \
-		../file_server/Serversocket.h
+Filehandler.o: ../file_server/Filehandler.cpp /root/Git/IKN/Exercise_6CPP/file_server/Filehandler.h \
+		../file_server/Serversocket.h \
+		/root/Git/IKN/Exercise_6CPP/file_server/Serversocket.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Filehandler.o ../file_server/Filehandler.cpp
 
 ####### Install
