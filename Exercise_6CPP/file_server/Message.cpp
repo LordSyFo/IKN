@@ -12,14 +12,14 @@ using namespace std;
 
 Message::Message()
 {
-    cout << "Making default message object.." << endl;
-    cout << "-------------------------------" << endl;
-    cout << "Adding N/A to fields..........." << endl;
+    //cout << "Making default message object.." << endl;
+    //cout << "-------------------------------" << endl;
+    //cout << "Adding N/A to fields..........." << endl;
     char* header = new char[256];   //Maybe truncate?
     sprintf(header,
             "Size:N/A\nType:N/A\nName:N/A\nChunksize:N/A\n");
     _messages.push_back(header);
-    cout << "Succesfully made not available message!" << endl;
+    //cout << "Succesfully made not available message!" << endl;
 }
 
 Message::Message(Filehandler file,string fileName, int sendLength)

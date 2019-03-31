@@ -41,7 +41,7 @@ Clientsocket::Clientsocket(char* target_ip, int portno,int servertype)
 void Clientsocket::connect_()
 {
     /*Connect to server*/
-    if (UDP_) return;
+    if (sockettype_ == UDP_) return;
     cout << "Connecting to server.." << endl;
     if (connect(sockfd_,(const sockaddr*)&server_address_,sizeof(server_address_))<0)
     {
@@ -111,11 +111,13 @@ char* Clientsocket::listen_(int* byte_count, int no_b_read)
                          0,
                          (struct sockaddr*)&server_address_,
                          &length);
-        *byte_count += n;
+        //*byte_count += n;
         if(0>n){
             error("ERROR reading from socket with UDP");
             return "";
         } else {
+            /*Truncate string*/
+            buffer_[n] = '\0';  //hacky dont do this ever pls
             return buffer_;
         }
     } else {

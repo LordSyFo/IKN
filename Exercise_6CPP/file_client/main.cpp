@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
     }
     std::string filename_str = argv[1];
 
-    Clientsocket Client("10.0.0.1",9000,TCP_);
+    Clientsocket Client("10.0.0.1",9000,UDP_);
 
     Client.open_();
     Client.connect_();
@@ -50,14 +50,18 @@ int main(int argc, char *argv[])
     messages.push_back(header);
 
     /*If header isn't empty listen to rest of messages*/
-    if (strcmp(header,"")!=0)
+    if (strcmp(header,"")!=0&&
+            filename_str!="L"&&
+            filename_str!="l"&&
+            filename_str!="u"&&
+            filename_str!="U")
     {
         /*Parse message to get fields including file-size*/
         //cout << "Recieved header.." << endl;
         file_message fm;
         fm = myMessage.parseFileMessage(messages);
 
-        if (strlen(header)<100|| fm.fileName == "N/A" && fm.fileType == "N/A")
+        if (fm.fileName == "N/A" && fm.fileType == "N/A")
         {
             cout << "Server could not find requested file!"<<endl;
             cout<<"Please try requesting a different file.."<<endl;
@@ -98,6 +102,24 @@ int main(int argc, char *argv[])
         cout << "Filename: " << fm.fileName << endl;
         cout << "File downloaded " << fm.chunkSize << " bytes at a time." << endl;
         fout.close();
+    }
+
+    if (filename_str!="L"&&filename_str!="l")
+    {
+        /*Expect to recieve CPU load information*/
+        cout << "--Server sent back CPU-load information--"<<endl;
+        cout<<header<<endl;
+        cout << "-----------------------------------------"<<endl;
+        return 0;
+    }
+
+    if (filename_str!="U"&&filename_str!="u")
+    {
+        /*Expect to recieve server-uptime information*/
+        cout << "--Server sent back uptime information--"<<endl;
+        cout<<header<<endl;
+        cout << "---------------------------------------"<<endl;
+        return 0;
     }
 
     return 0;
